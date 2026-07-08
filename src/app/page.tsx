@@ -1,65 +1,155 @@
-import Image from "next/image";
+import Container from "@/components/layout/Container";
+import HeroSection from "@/components/sections/HeroSection";
+import EventSection from "@/components/sections/EventSection";
+import ScheduleCarousel from "@/components/layout/containers/ScheduleCarousel";
+import TextActionBlock from "@/components/ui/layout/TextActionBlock";
+import HeroContent from "@/components/ui/layout/HeroContent";
+import PlusPattern from "@/components/ui/svg/PlusPattern";
+import LinesPattern from "@/components/ui/svg/LinesPattern";
+import { MoveRight } from "lucide-react";
+
+const scheduleColumns = [
+  {
+    day: "Hoje",
+    items: [
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+    ],
+  },
+  {
+    day: "Amanhã",
+    items: [
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+    ],
+  },
+  {
+    day: "Quarta",
+    items: [
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+    ],
+    
+  },
+    {
+    day: "Quinta",
+    items: [
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+    ],
+    
+  },
+    {
+    day: "Sexta",
+    items: [
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+    ],
+    
+  },
+    {
+    day: "Sábado",
+    items: [
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+    ],
+    
+  },
+    {
+    day: "Domingo",
+    items: [
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+      { title: "Celebração da Manhã", time: "08:00" },
+    ],
+    
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      <HeroSection backgroundImage="/img/hero/hero-img.png">
+        <Container className="flex flex-col items-start justify-center gap-3 text-white min-h-screen">
+          <HeroContent
+            eyebrow="Joinville - SC"
+            titleLines={["UM ESPAÇO ABERTO", "PARA TODOS"]}
+            description="Veja os próximos horários de missa e os avisos atualizados da paróquia"
+            primaryLabel="Ver Horários"
+            secondaryLabel="Próximos Eventos"
+          />
+        </Container>
+      </HeroSection>
+
+     <EventSection />
+
+      <section className="flex justify-center items-center min-h-[65dvh]">
+        <TextActionBlock
+          title="Com Você em Qualquer Lugar"
+          description="Confira nossa agenda presencial e também acompanhe as transmissões ao vivo de onde estiver usando a internet. Veja a programação a seguir:"
+          buttonLabel="Ver Transmissão"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+        <ScheduleCarousel columns={scheduleColumns} />
+      </section>
+
+      <Container className="flex justify-center items-center">
+        <div className="relative flex justify-evenly items-center bg-[#F8F8F8] rounded-xl min-h-[65dvh] overflow-hidden">
+          <PlusPattern className="absolute top-0 left-0 w-60 rotate-180" />
+          <LinesPattern className="absolute top-0 right-0 w-60" />
+          <LinesPattern className="absolute bottom-0 left-0 w-60 rotate-180" />
+          <PlusPattern className="absolute bottom-0 right-0 w-60" />
+
+          <TextActionBlock
+            title="Faça sua Doação"
+            description="A doação é um modo de agradecer a Deus por todas as bênçãos na nossa vida. E também é como plantamos a semente em busca de alguma graça específica."
+            buttonLabel="Fazer uma Doação"
+          />
+
+          <TextActionBlock
+            title="Faça seu Testemunho"
+            description="A oração sincera é o caminho mais puro para conversar com Deus. Abra seu coração, compartilhe seu pedido de oração e ore pelos outros no nosso mural virtual."
+            buttonLabel="Conte sua História"
+          />
+        </div>
+      </Container>
+
+      <Container className="flex justify-center items-center min-h-[95dvh]">
+        <div className="flex justify-center items-center flex-col gap-3 w-full">
+          <div className="relative">
+            <img src="/img/hero/newsletter.png" alt="Igreja" className="rounded-xl w-full" />
+            <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-transparent to-white rounded-b-xl" />
+          </div>
+          <h2 className="text-4xl text-center tracking-wide">Se Inscreva na Nossa Newsletter</h2>
+          <p className="text-lg text-black/60 text-center w-[30%] leading-[1.2]">
+            Fique por dentro de tudo o que acontece na nossa família e receba uma dose extra de fé direto no seu e-mail.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+          <div className="flex items-center bg-white rounded-full border border-black/10 pl-5 shadow-sm mt-2 w-[45%]">
+            <input
+              type="email"
+              placeholder="Seu melhor email!"
+              className="flex-1 bg-transparent outline-none text-black/80 placeholder:text-black/40"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <button className="flex items-center gap-2 bg-[#7A0C1E] px-6 py-5 text-white rounded-full h-full font-medium hover:bg-[#661828] transition-colors">
+              Se Inscreva Agora
+              <MoveRight size={24} />
+            </button>
+          </div>
         </div>
-      </main>
-    </div>
+      </Container>
+    </>
   );
 }
