@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+
 import Container from "@/components/layout/Container";
 import HeroSection from "@/components/sections/HeroSection";
 import EventSection from "@/components/sections/EventSection";
@@ -80,9 +85,21 @@ const scheduleColumns = [
 ];
 
 export default function Home() {
+   const [offset, setOffset] = useState(50);
+
+  useEffect(() => {
+    const onScroll = () => {
+const value = (window.scrollY * 0.05) % 100;
+setOffset(value);
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
     <>
-      <HeroSection backgroundImage="/img/hero/hero-img.png">
+      <HeroSection backgroundImage="/img/hero/hero-img.png" className="relative">
         <Container className="flex flex-col items-start justify-center gap-3 text-white min-h-screen">
           <HeroContent
             eyebrow="Joinville - SC"
@@ -92,6 +109,48 @@ export default function Home() {
             secondaryLabel="Próximos Eventos"
           />
         </Container>
+            <div className="absolute bottom-[-200px] left-0 z-20 w-full pointer-events-none">
+  <svg
+      viewBox="0 0 1440 220"
+      preserveAspectRatio="none"
+      className="w-full h-100"
+    >
+      <defs>
+        <path
+          id="wavePath"
+          d="
+            M0,150
+            C260,80 560,100 760,130
+            C980,160 1220,170 1440,110
+          "
+        />
+      </defs>
+
+      <path
+        d="
+          M0,150
+          C260,80 560,100 760,130
+          C980,160 1220,170 1440,110
+        "
+        fill="none"
+        stroke="#7B1111"
+        strokeWidth="120"
+        strokeLinecap="round"
+      />
+
+      <text
+        fill="white"
+        fontSize="32"
+        letterSpacing="8"
+        fontWeight="600"
+      >
+<textPath href="#wavePath" startOffset={`${offset}%`}>
+  MISSAS - EVENTOS - AVISOS -
+  MISSAS - EVENTOS - AVISOS -
+</textPath>
+      </text>
+    </svg>
+    </div>
       </HeroSection>
 
      <EventSection />
@@ -105,6 +164,7 @@ export default function Home() {
 
         <ScheduleCarousel columns={scheduleColumns} />
       </section>
+      
 
       <Container className="flex justify-center items-center">
         <div className="relative flex justify-evenly items-center bg-[#F8F8F8] rounded-xl min-h-[65dvh] overflow-hidden">

@@ -3,41 +3,54 @@ import { ArrowLeft, ArrowBigDown, ArrowBigDownDashIcon, HeartHandshake } from "l
 
 export default function FooterComponent() {
   return (
-    <footer className="bg-[#701513] pt-10 pb-6">
-      <Container className="w-full flex flex-col gap-10">
+<footer className="relative bg-[#701513] pb-6 pb-6">
+  <Container className="pb-10">
+    <svg
+      viewBox="0 0 100 10"
+      preserveAspectRatio="none"
+      className="w-full h-7 block rotate-180"
+    >
+      <path
+        d="M0,10 L5,0 H95 L100,10 Z"
+        fill="white"
+      />
+    </svg>
+  </Container>
 
+      <Container className="w-full flex flex-col gap-10">
+    
         {/* Topo: texto + card "Sinta-se em casa" */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="flex flex-col gap-4">
-            <h3 className="text-white text-xl font-semibold">
+            <h3 className="text-white text-3xl tracking-wide font-semibold">
               Obrigado pela sua Visita!
             </h3>
-            <p className="text-white text-sm">
+            <p className="text-white text-lg tracking-wide">
               Nos acompanhe nas Redes Sociais
             </p>
             <div className="flex gap-3">
               <a
                 href="#"
-                className="w-9 h-9 rounded-full bg-white flex items-center justify-center"
+                className="flex items-center rounded-full justify-center bg-white p-2"
               >
-                <ArrowLeft size={18} className="text-[#701513]" />
+                <img className="w-7 h-auto" src="/img/svg/instagram.png" alt="Instagram" />
               </a>
               <a
                 href="#"
-                className="w-9 h-9 rounded-full bg-white flex items-center justify-center"
+                className="flex items-center rounded-full justify-center bg-white p-2"
               >
-                <ArrowBigDown size={18} className="text-[#701513]" />
+                <img className="w-7 h-auto" src="/img/svg/youtube.png" alt="Youtube" />
               </a>
               <a
                 href="#"
-                className="w-9 h-9 rounded-full bg-white flex items-center justify-center"
+                className="flex items-center rounded-full justify-center bg-white p-2"
               >
-                <ArrowBigDownDashIcon size={18} className="text-[#701513]" />
+                <img className="w-7 h-auto" src="/img/svg/facebook.png" alt="Facebook" />
               </a>
             </div>
           </div>
 
-          <div className="bg-white rounded-full flex items-center p-3 pl-8 gap-8">
+          {/* <div className="bg-white rounded-full flex items-center p-3 pl-8 gap-8">
             <div className="flex flex-col shrink-0">
               <span className="flex items-center gap-2 text-[#701513] font-semibold text-lg whitespace-nowrap">
                 <HeartHandshake size={22} />
@@ -56,7 +69,7 @@ export default function FooterComponent() {
               Criar Perfil Agora
               <span>→</span>
             </a>
-          </div>
+          </div> */}
         </div>
 
         {/* Colunas de links */}
@@ -77,9 +90,9 @@ export default function FooterComponent() {
           <div className="flex flex-col gap-2">
             <h4 className="text-white font-semibold text-sm">Onde Estamos?</h4>
             <div className="rounded-md text-white/70 text-sm w-64">
-              <p>R. José Cerqueira, 500 - Petrópolis, Joinville - SC</p>
+              <p>R. dos Carajás, 200 - Petrópolis, Joinville - SC</p>
               <p>Cep: 89230-750</p>
-              <p>Telefone: (47) 3456-1234</p>
+              <p>Telefone: (47) 3436-3779 </p>
             </div>
           </div>
 

@@ -84,17 +84,17 @@ export default function EventSection() {
 
   return (
     <HeroSection backgroundImage={current.image} align="end">
-      <div className="flex justify-between w-full h-full pl-17 pb-15">
+      <div className="flex justify-between w-full h-full pl-17 pb-30">
         <HeroContent
           key={pos % n}
           titleLines={current.titleLines}
           description={current.description}
           primaryLabel={BUTTON_LABEL}
-          secondaryLabel={BUTTON_LABEL}
+          secondaryLabel= "Garantir Ingresso"
         />
 
         <div
-          className="absolute bottom-8 right-0 overflow-hidden"
+          className="absolute bottom-20 right-0 overflow-hidden"
           style={{ width: WINDOW_WIDTH }}
         >
           <div
@@ -127,7 +127,7 @@ export default function EventSection() {
           </div>
         </div>
 
-        <div className="absolute bottom-4 left-17 flex gap-2">
+        <div className="absolute bottom-15 left-17 flex gap-2">
           {slides.map((_, i) => (
             <button
               key={i}
@@ -140,6 +140,25 @@ export default function EventSection() {
           ))}
         </div>
       </div>
+  <svg
+    viewBox="0 0 100 10"
+    preserveAspectRatio="none"
+    className="
+      absolute
+      bottom-0
+      left-0
+      w-full
+      h-7
+      px-17
+      pointer-events-none
+    "
+  >
+    <path
+      d="M0,10 L5,0 H95 L100,10 Z"
+      fill="white"
+    />
+  </svg>
+
     </HeroSection>
   );
 }

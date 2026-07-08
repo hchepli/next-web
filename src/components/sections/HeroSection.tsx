@@ -18,7 +18,7 @@ export default function HeroSection({
   const alignment = align === "start" ? "items-start justify-center" : "items-end justify-end";
 
   return (
-    <section className={`relative flex flex-col ${alignment} min-h-screen overflow-hidden ${className}`}>
+    <section className={`relative flex flex-col ${alignment} min-h-screen ${className}`}>
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url('${backgroundImage}')` }}

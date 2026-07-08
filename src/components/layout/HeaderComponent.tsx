@@ -137,6 +137,7 @@ export default function HeaderComponent() {
                         );
                     })}
 
+{/* 
                     <li>
                         <Link
                             href="/profile"
@@ -145,7 +146,7 @@ export default function HeaderComponent() {
                             <User size={20} />
                             Seu Perfil
                         </Link>
-                    </li>
+                    </li> */}
                 </ul>
             </nav>
 
@@ -195,7 +196,7 @@ export default function HeaderComponent() {
                         </li>
                     ))}
 
-                    <li className="mt-3">
+                    {/* <li className="mt-3">
                         <Link
                             href="/profile"
                             onClick={() => setIsOpen(false)}
@@ -204,7 +205,7 @@ export default function HeaderComponent() {
                             <User size={20} />
                             Seu Perfil
                         </Link>
-                    </li>
+                    </li> */}
                 </ul>
             </nav>
         </header>
