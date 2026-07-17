@@ -27,9 +27,8 @@ export default function Button({
       "bg-transparent border border-black text-black hover:text-white",
   };
 
-  // camada que desliza da esquerda para a direita
   const overlays = {
-    primary: "bg-[#4a0d0c]", // vermelho mais escuro
+    primary: "bg-[#4a0d0c]",
     secondary: "bg-white",
     "secondary-dark": "bg-black",
   };
@@ -44,13 +43,11 @@ export default function Button({
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
-      {/* camada de preenchimento animada */}
       <span
         aria-hidden
         className={`absolute inset-0 -z-10 origin-left scale-x-0 transform transition-transform duration-300 ease-out group-hover:scale-x-100 ${overlays[variant]}`}
       />
 
-      {/* conteúdo (texto/ícone) por cima da camada, com transição de cor sincronizada */}
       <span className="relative z-10 flex items-center justify-center gap-1 transition-colors duration-300 ease-out">
         {children}
         {icon && <ArrowUpRight size={18} />}

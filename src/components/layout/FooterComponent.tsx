@@ -1,24 +1,12 @@
+import SectionDivider from "./chevski/SectionDivider";
 import Container from "./Container";
-import { ArrowLeft, ArrowBigDown, ArrowBigDownDashIcon, HeartHandshake } from "lucide-react";
 
 export default function FooterComponent() {
   return (
 <footer className="relative bg-[#701513] pb-6 pb-6">
-  <Container className="pb-10">
-    <svg
-      viewBox="0 0 100 10"
-      preserveAspectRatio="none"
-      className="w-full h-7 block rotate-180"
-    >
-      <path
-        d="M0,10 L5,0 H95 L100,10 Z"
-        fill="white"
-      />
-    </svg>
-  </Container>
 
       <Container className="w-full flex flex-col gap-10">
-    
+    <SectionDivider showLogo showName rotate />
         {/* Topo: texto + card "Sinta-se em casa" */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="flex flex-col gap-4">

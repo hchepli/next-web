@@ -1,102 +1,61 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
+"use client"
 
 import Container from "@/components/layout/Container";
 import HeroSection from "@/components/sections/HeroSection";
-import EventSection from "@/components/sections/EventSection";
-import ScheduleCarousel from "@/components/layout/containers/ScheduleCarousel";
-import TextActionBlock from "@/components/ui/layout/TextActionBlock";
 import HeroContent from "@/components/ui/layout/HeroContent";
-import PlusPattern from "@/components/ui/svg/PlusPattern";
-import LinesPattern from "@/components/ui/svg/LinesPattern";
-import { MoveRight } from "lucide-react";
+import { CarouselIndicators } from "@/components/ui/buttons/CarouselIndicators";
+import { EventCarouselTrack } from "@/components/ui/carousel/EventCarouselTrack";
+import SectionDivider from "@/components/layout/chevski/SectionDivider";
+import TextActionBlock from "@/components/ui/layout/TextActionBlock";
+import { PatternedPanel } from "@/components/ui/layout/PaternedPanel";
+import WaveText from "@/components/layout/chevski/WaveText";
+import { NewsletterForm } from "@/components/ui/form/NewsletterForm";
+import { NewsletterIntro } from "@/components/ui/layout/NewsletterIntro";
+import ScheduleCard from "@/components/ui/cards/ScheduleCard";
+import CarouselControls from "@/components/ui/buttons/CarouselControls";
+import { ScheduleCarouselTrack } from "@/components/ui/carousel/ScheduleCarouselTrack";
+import { useEventHeroCarousel } from "@/hooks/useEventHeroCarousel";
+import { useWeeklyScheduleCarousel } from "@/hooks/useWeeklyScheduleCarousel";
+import { useWeeklyMassSchedule } from "@/hooks/useWeeklyMassSchedule";
+import { useUpcomingEventSlides } from "@/hooks/useUpcomingEventSlides";
 
-const scheduleColumns = [
-  {
-    day: "Hoje",
-    items: [
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-    ],
-  },
-  {
-    day: "Amanhã",
-    items: [
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-    ],
-  },
-  {
-    day: "Quarta",
-    items: [
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-    ],
-    
-  },
-    {
-    day: "Quinta",
-    items: [
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-    ],
-    
-  },
-    {
-    day: "Sexta",
-    items: [
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-    ],
-    
-  },
-    {
-    day: "Sábado",
-    items: [
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-    ],
-    
-  },
-    {
-    day: "Domingo",
-    items: [
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-      { title: "Celebração da Manhã", time: "08:00" },
-    ],
-    
-  },
-];
+const TRANSITION_MS = 700;
+const FADE_MS = 900;
+const CARD_WIDTH = 350;
+const GAP = 12; // gap do hero carousel de eventos
+const PARTIAL_VISIBLE = 180; // quanto do 2º card aparece cortado
+const STEP = CARD_WIDTH + GAP;
+const WINDOW_WIDTH = CARD_WIDTH + GAP + PARTIAL_VISIBLE;
+
 
 export default function Home() {
-   const [offset, setOffset] = useState(50);
+  const { data: eventSlides, loading: eventsLoading } = useUpcomingEventSlides();
+  const { data: weeklySchedule, loading: scheduleLoading } = useWeeklyMassSchedule();
 
-  useEffect(() => {
-    const onScroll = () => {
-const value = (window.scrollY * 0.05) % 100;
-setOffset(value);
-    };
+  const {
+    n,
+    pos,
+    current,
+    partialCardIndex,
+    trackItems,
+    withTransition,
+    nextVisible,
+    handleTransitionEnd,
+    handleIndicatorClick,
+  } = useEventHeroCarousel(eventSlides ?? []);
 
-    window.addEventListener("scroll", onScroll);
+  const {
+    scheduleTotal,
+    extendedScheduleColumns,
+    scheduleCardWidth,
+    scheduleIndex,
+    scheduleWithTransition,
+    handleScheduleNext,
+    handleSchedulePrevious,
+    handleScheduleTransitionEnd,
+    scheduleStep,
+  } = useWeeklyScheduleCarousel(weeklySchedule ?? []);
 
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
   return (
     <>
       <HeroSection backgroundImage="/img/hero/hero-img.png" className="relative">
@@ -109,70 +68,90 @@ setOffset(value);
             secondaryLabel="Próximos Eventos"
           />
         </Container>
-            <div className="absolute bottom-[-200px] left-0 z-20 w-full pointer-events-none">
-  <svg
-      viewBox="0 0 1440 220"
-      preserveAspectRatio="none"
-      className="w-full h-100"
-    >
-      <defs>
-        <path
-          id="wavePath"
-          d="
-            M0,150
-            C260,80 560,100 760,130
-            C980,160 1220,170 1440,110
-          "
-        />
-      </defs>
-
-      <path
-        d="
-          M0,150
-          C260,80 560,100 760,130
-          C980,160 1220,170 1440,110
-        "
-        fill="none"
-        stroke="#7B1111"
-        strokeWidth="120"
-        strokeLinecap="round"
-      />
-
-      <text
-        fill="white"
-        fontSize="32"
-        letterSpacing="8"
-        fontWeight="600"
-      >
-<textPath href="#wavePath" startOffset={`${offset}%`}>
-  MISSAS - EVENTOS - AVISOS -
-  MISSAS - EVENTOS - AVISOS -
-</textPath>
-      </text>
-    </svg>
-    </div>
+        <div className="absolute bottom-[-80px] sm:bottom-[-120px] lg:bottom-[-200px] left-0 z-20 w-full pointer-events-none">
+          <WaveText />
+        </div>
       </HeroSection>
 
-     <EventSection />
+      {eventsLoading || !current ? (
+        <HeroSection backgroundImage="/img/hero/eventos-img.png" align="end">
+          <p className="text-white pl-5 sm:pl-8 md:pl-17">Carregando eventos...</p>
+        </HeroSection>
+      ) : (
+        <HeroSection backgroundImage={current.image} align="end">
+          <div className="relative flex flex-col lg:flex-row lg:justify-between w-full h-full px-5 sm:px-8 md:pl-17 pt-6 md:pt-10 lg:pt-0 pb-10 sm:pb-16 md:pb-30">
+            <EventCarouselTrack
+              items={trackItems}
+              translateX={(pos + 1) * STEP}
+              withTransition={withTransition}
+              transitionMs={TRANSITION_MS}
+              partialCardIndex={partialCardIndex}
+              nextVisible={nextVisible}
+              fadeMs={FADE_MS}
+              onTransitionEnd={handleTransitionEnd}
+              windowWidth={WINDOW_WIDTH}
+            />
 
-      <section className="flex justify-center items-center min-h-[65dvh]">
+            <div className="flex flex-col justify-end flex-1 lg:order-first">
+              <HeroContent
+                key={pos % n}
+                titleLines={current.titleLines}
+                description={current.description}
+                primaryLabel="Saiba Mais"
+                secondaryLabel="Garantir Ingresso"
+              />
+            </div>
+
+            <CarouselIndicators
+              count={n}
+              activeIndex={pos % n}
+              onSelect={handleIndicatorClick}
+              className="hidden md:flex mt-4 lg:mt-0 lg:absolute lg:bottom-15 lg:left-17"
+            />
+          </div>
+          <Container>
+            <SectionDivider showLogo showName position="left" />
+          </Container>
+        </HeroSection>
+      )}
+      <section className="flex flex-col lg:flex-row justify-center items-center min-h-[100dvh] lg:min-h-[65dvh] gap-5 lg:gap-0 px-6 lg:px-0">
         <TextActionBlock
           title="Com Você em Qualquer Lugar"
           description="Confira nossa agenda presencial e também acompanhe as transmissões ao vivo de onde estiver usando a internet. Veja a programação a seguir:"
           buttonLabel="Ver Transmissão"
         />
 
-        <ScheduleCarousel columns={scheduleColumns} />
+        <div className="flex flex-1 flex-col justify-center items-start gap-5 overflow-hidden w-full">
+          <div className="flex w-full justify-between items-center px-6 sm:px-10 lg:pr-17 lg:pl-0">
+            <h4>Programação:</h4>
+            <CarouselControls onPrevious={handleSchedulePrevious} onNext={handleScheduleNext} />
+          </div>
+
+          {scheduleLoading || scheduleTotal === 0 ? (
+            <p className="px-6 sm:px-10">Carregando programação...</p>
+          ) : (
+            <ScheduleCarouselTrack
+              index={scheduleIndex}
+              step={scheduleStep}
+              withTransition={scheduleWithTransition}
+              onTransitionEnd={handleScheduleTransitionEnd}
+              wrapperClassName="px-6 sm:px-10 lg:px-0"
+            >
+              {extendedScheduleColumns.map((column, i) => (
+                <ScheduleCard
+                  key={i}
+                  day={column.day}
+                  items={column.items}
+                  style={{ minWidth: scheduleCardWidth, width: scheduleCardWidth }}
+                />
+              ))}
+            </ScheduleCarouselTrack>
+          )}
+        </div>
       </section>
-      
 
       <Container className="flex justify-center items-center">
-        <div className="relative flex justify-evenly items-center bg-[#F8F8F8] rounded-xl min-h-[65dvh] overflow-hidden">
-          <PlusPattern className="absolute top-0 left-0 w-60 rotate-180" />
-          <LinesPattern className="absolute top-0 right-0 w-60" />
-          <LinesPattern className="absolute bottom-0 left-0 w-60 rotate-180" />
-          <PlusPattern className="absolute bottom-0 right-0 w-60" />
-
+        <PatternedPanel>
           <TextActionBlock
             title="Faça sua Doação"
             description="A doação é um modo de agradecer a Deus por todas as bênçãos na nossa vida. E também é como plantamos a semente em busca de alguma graça específica."
@@ -184,30 +163,24 @@ setOffset(value);
             description="A oração sincera é o caminho mais puro para conversar com Deus. Abra seu coração, compartilhe seu pedido de oração e ore pelos outros no nosso mural virtual."
             buttonLabel="Conte sua História"
           />
-        </div>
+        </PatternedPanel>
       </Container>
 
       <Container className="flex justify-center items-center min-h-[95dvh]">
         <div className="flex justify-center items-center flex-col gap-3 w-full">
-          <div className="relative">
-            <img src="/img/hero/newsletter.png" alt="Igreja" className="rounded-xl w-full" />
-            <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-transparent to-white rounded-b-xl" />
-          </div>
-          <h2 className="text-4xl text-center tracking-wide">Se Inscreva na Nossa Newsletter</h2>
-          <p className="text-lg text-black/60 text-center w-[30%] leading-[1.2]">
-            Fique por dentro de tudo o que acontece na nossa família e receba uma dose extra de fé direto no seu e-mail.
-          </p>
-          <div className="flex items-center bg-white rounded-full border border-black/10 pl-5 shadow-sm mt-2 w-[45%]">
-            <input
-              type="email"
-              placeholder="Seu melhor email!"
-              className="flex-1 bg-transparent outline-none text-black/80 placeholder:text-black/40"
-            />
-            <button className="flex items-center gap-2 bg-[#7A0C1E] px-6 py-5 text-white rounded-full h-full font-medium hover:bg-[#661828] transition-colors">
-              Se Inscreva Agora
-              <MoveRight size={24} />
-            </button>
-          </div>
+          <NewsletterIntro
+            image="/img/hero/newsletter.png"
+            imageAlt="Igreja"
+            title="Se Inscreva na Nossa Newsletter"
+            description="Fique por dentro de tudo o que acontece na nossa família e receba uma dose extra de fé direto no seu e-mail."
+          />
+          <NewsletterForm
+            className="w-full sm:w-[80%] md:w-[60%] lg:w-[45%]"
+            onSubmit={(email) => {
+              // ex: chamar API de inscrição
+              console.log("Inscrever:", email);
+            }}
+          />
         </div>
       </Container>
     </>
