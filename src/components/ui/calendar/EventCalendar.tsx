@@ -2,12 +2,15 @@
 "use client";
 
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
-import type { View } from "react-big-calendar";
+import type { View, Event as BigCalendarEvent } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-overrides.css";
+import { useCalendarEntries } from "@/hooks/useCalendarEntries";
+import { calendarCategories } from "@/data/event/calendarCategory";
+import { CalendarCategoryKey } from "@/types/event/calendarEntry";
 
 const locales = { "pt-BR": ptBR };
 
@@ -19,31 +22,19 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const eventColors: Record<string, string> = {
-  liturgia: "#E8B923",
-  eventos: "#701513",
-  pastorais: "#1E3A5F",
-};
+const categoryColors: Record<CalendarCategoryKey, string> = calendarCategories.reduce(
+  (acc, category) => ({ ...acc, [category.key]: category.color }),
+  {} as Record<CalendarCategoryKey, string>
+);
 
-const events = [
-  {
-    title: "Missa Dominical",
-    start: new Date(2026, 6, 5, 9, 0),
-    end: new Date(2026, 6, 5, 10, 0),
-    category: "liturgia",
-  },
-  {
-    title: "Congresso de Famílias",
-    start: new Date(2026, 6, 10, 8, 0),
-    end: new Date(2026, 6, 11, 18, 0),
-    category: "eventos",
-  },
-];
+interface CalendarViewEvent extends BigCalendarEvent {
+  category: CalendarCategoryKey;
+}
 
-function eventPropGetter(event: any) {
+function eventPropGetter(event: CalendarViewEvent) {
   return {
     style: {
-      backgroundColor: eventColors[event.category] ?? "#701513",
+      backgroundColor: categoryColors[event.category] ?? "#701513",
       borderRadius: "6px",
       border: "none",
       color: "#fff",
@@ -56,6 +47,26 @@ function eventPropGetter(event: any) {
 export default function EventCalendar() {
   const [view, setView] = useState<View>("month");
   const [date, setDate] = useState(new Date());
+  const { data: calendarEntries, loading } = useCalendarEntries();
+
+  const events: CalendarViewEvent[] = useMemo(
+    () =>
+      (calendarEntries ?? []).map((entry) => ({
+        title: entry.title,
+        start: new Date(entry.start),
+        end: new Date(entry.end),
+        category: entry.category,
+      })),
+    [calendarEntries]
+  );
+
+  if (loading) {
+    return (
+      <div className="w-full rounded-2xl border border-gray-200 p-6">
+        <p className="text-black/60">Carregando calendário...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full rounded-2xl border border-gray-200 p-6">

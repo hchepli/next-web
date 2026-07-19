@@ -1,39 +1,65 @@
+"use client";
+
+import { useState } from "react";
 import Container from "@/components/layout/Container";
-import Image from "next/image";
-import { Calendar, HatGlasses, MoveRight } from "lucide-react";
-import Button from "@/components/ui/buttons/Button";
+import { Calendar, HatGlasses, Info, X } from "lucide-react";
 import EventCalendar from "@/components/ui/calendar/EventCalendar";
+import CalendarLegendItem from "@/components/ui/calendar/CalendarLegendItem";
+import ComunicadoHero from "@/components/ui/cards/ComunicadoHero";
+import NewsSidebarCard from "@/components/ui/cards/NewsSidebarCard";
+import FundraisingCard from "@/components/ui/cards/FundraisingCard";
+import ComunicadoCarouselCard from "@/components/ui/cards/ComunicadoCarouselCard";
+import AnnouncementCarouselArrows from "@/components/ui/buttons/AnnouncementCarouselArrows";
+import { useFeaturedAnnouncement } from "@/hooks/useFeaturedAnnouncement";
+import { useSidebarAnnouncements } from "@/hooks/useSidebarAnnouncements";
+import { useCarouselAnnouncements } from "@/hooks/useCarouselAnnouncements";
+import { useActiveFundraisingCampaign } from "@/hooks/useActiveFundraisingCampaign";
+import { calendarCategories } from "@/data/event/calendarCategory";
+
+const FALLBACK_ANNOUNCEMENT_IMAGE = "/img/hero/eventos-img.png"; // usada quando o comunicado não tem imagem própria
+const CAROUSEL_PAGE_SIZE = 4; // quantos comunicados aparecem por página (4 no desktop)
+const CAROUSEL_BREAKPOINTS: Array<"base" | "sm" | "lg" | "xl"> = ["base", "sm", "lg", "xl"];
 
 export default function Comunicados() {
+    const { data: featuredAnnouncement, loading: featuredLoading } = useFeaturedAnnouncement();
+    const { data: sidebarAnnouncements, loading: sidebarLoading } = useSidebarAnnouncements();
+    const { data: carouselAnnouncements, loading: carouselLoading } = useCarouselAnnouncements();
+    const { data: fundraisingCampaign, loading: fundraisingLoading } = useActiveFundraisingCampaign();
+
+    const [carouselPage, setCarouselPage] = useState(0);
+    const totalCarouselPages = carouselAnnouncements
+        ? Math.ceil(carouselAnnouncements.length / CAROUSEL_PAGE_SIZE)
+        : 0;
+    const visibleCarouselAnnouncements = (carouselAnnouncements ?? []).slice(
+        carouselPage * CAROUSEL_PAGE_SIZE,
+        carouselPage * CAROUSEL_PAGE_SIZE + CAROUSEL_PAGE_SIZE
+    );
+    const canGoNextPage = carouselPage < totalCarouselPages - 1;
+    const canGoPreviousPage = carouselPage > 0;
+
+    const [isLegendOpen, setIsLegendOpen] = useState(false);
+
     return (
         <Container className="w-full min-h-screen mt-20 pt-20">
 
             {/* HERO + SIDEBAR */}
-            <section className="w-full flex flex-col lg:flex-row items-start justify-between gap-10">
+            <section className="w-full grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-6 lg:gap-10 items-start">
 
-                {/* Hero da imagem */}
-                <div className="w-full lg:flex-[0_0_60%] relative rounded-2xl overflow-hidden aspect-[16/10]">
-                    <Image
-                        src="/img/comunicados/noticia.png"
-                        alt="Congresso de Famílias 2026"
-                        fill
-                        className="object-cover"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-black/40" />
-                    <div className="absolute bottom-10 sm:bottom-16 lg:bottom-25 left-5 sm:left-8 lg:left-10 right-5 sm:right-8 flex flex-col items-start gap-3">
-                        <span className="flex justify-center items-center text-sm sm:text-md font-semibold text-white bg-[#FF7700]/40 backdrop-blur-sm px-4 py-1 rounded-full">
-                            Eventos
-                        </span>
-                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white max-w-2xl">
-                            Vem aí o Congresso de Famílias 2026: Inscrições abertas para um
-                            final de semana de renovação.
-                        </h1>
+                {featuredLoading || !featuredAnnouncement ? (
+                    <div className="w-full rounded-2xl overflow-hidden aspect-[16/10] flex items-center justify-center bg-gray-100">
+                        <p className="text-black/60">Carregando destaque...</p>
                     </div>
-                </div>
+                ) : (
+                    <ComunicadoHero
+                        image={featuredAnnouncement.image ?? FALLBACK_ANNOUNCEMENT_IMAGE}
+                        imageAlt={featuredAnnouncement.title}
+                        badgeLabel={featuredAnnouncement.category}
+                        title={featuredAnnouncement.title}
+                    />
+                )}
 
                 {/* Sidebar */}
-                <div className="w-full lg:w-auto flex flex-col gap-5 mt-2">
+                <div className="w-full min-w-0 flex flex-col gap-5 mt-2">
 
                     {/* Título da sidebar */}
                     <div className="flex flex-col gap-2">
@@ -43,156 +69,68 @@ export default function Comunicados() {
                         </div>
                     </div>
 
-                    {/* Card de notícia 1 */}
-                    <div className="flex items-stretch justify-center gap-4">
-                        <div className="relative w-[7rem] h-[7rem] sm:w-[10rem] sm:h-[10rem] shrink-0 rounded-lg overflow-hidden">
-                            <Image
-                                src="/img/comunicados/ministerios.png"
-                                alt="Ministérios"
-                                fill
-                                className="object-cover"
+                    {sidebarLoading || !sidebarAnnouncements ? (
+                        <p className="text-black/60">Carregando comunicados...</p>
+                    ) : (
+                        sidebarAnnouncements[0] && (
+                            <NewsSidebarCard
+                                image={sidebarAnnouncements[0].image ?? FALLBACK_ANNOUNCEMENT_IMAGE}
+                                imageAlt={sidebarAnnouncements[0].title}
+                                badgeLabel={sidebarAnnouncements[0].category}
+                                title={sidebarAnnouncements[0].title}
                             />
-                        </div>
-                        <div className="flex flex-col items-start justify-center gap-2">
-                            <span className="flex justify-center items-center text-sm sm:text-md font-semibold text-white bg-[#0059FF]/40 backdrop-blur-sm px-4 py-1 rounded-full">
-                                Ministérios
-                            </span>
-                            <p className="max-w-[85%] text-base sm:text-xl font-semibold text-black tracking-wide leading-[1.2]">
-                                Escala de Voluntários: Confira quem serve no próximo domingo
-                            </p>
-                        </div>
-                    </div>
+                        )
+                    )}
 
-                    {/* Card de doação */}
-                    <div className="w-full border border-gray-200 rounded-2xl p-5 flex flex-col gap-3">
-                        <span className="text-lg sm:text-xl font-semibold text-black">Construindo Nosso Futuro!</span>
-                        <p className="text-base sm:text-lg text-black/60 w-full sm:w-[65%] leading-[1.2]">
-                            Contribua com a nossa nova área e deixe seu legado nesta obra.
-                        </p>
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 w-full">
-                            <div className="flex-1 flex flex-col gap-1">
-                                <div className="flex items-baseline gap-1 flex-wrap">
-                                    <span className="text-lg font-bold text-[#206D0D]">R$75.769,78</span>
-                                    <span className="text-sm font-normal text-gray-400">/ R$100.000,00</span>
-                                </div>
-                                <div className="w-full h-6 bg-[#55D835] rounded-full overflow-hidden">
-                                    <div className="h-full bg-[#206D0D] rounded-full" style={{ width: "75%" }} />
-                                </div>
-                            </div>
-                            <Button size="sm" icon>Quero ajudar</Button>
-                        </div>
-                    </div>
+                    {fundraisingLoading || !fundraisingCampaign ? (
+                        <p className="text-black/60">Carregando campanha...</p>
+                    ) : (
+                        <FundraisingCard
+                            title={fundraisingCampaign.title}
+                            description={fundraisingCampaign.description}
+                            currentAmount={fundraisingCampaign.currentAmount}
+                            goalAmount={fundraisingCampaign.goalAmount}
+                        />
+                    )}
 
-                    {/* Card de notícia 2 */}
-                    <div className="flex items-stretch justify-center gap-4">
-                        <div className="relative w-[7rem] h-[7rem] sm:w-[10rem] sm:h-[10rem] shrink-0 rounded-lg overflow-hidden">
-                            <Image
-                                src="/img/comunicados/ministerios.png"
-                                alt="Ministérios"
-                                fill
-                                className="object-cover"
+                    {sidebarLoading || !sidebarAnnouncements ? null : (
+                        sidebarAnnouncements[1] && (
+                            <NewsSidebarCard
+                                image={sidebarAnnouncements[1].image ?? FALLBACK_ANNOUNCEMENT_IMAGE}
+                                imageAlt={sidebarAnnouncements[1].title}
+                                badgeLabel={sidebarAnnouncements[1].category}
+                                title={sidebarAnnouncements[1].title}
                             />
-                        </div>
-                        <div className="flex flex-col items-start justify-center gap-2">
-                            <span className="flex justify-center items-center text-sm sm:text-md font-semibold text-white bg-[#0059FF]/40 backdrop-blur-sm px-4 py-1 rounded-full">
-                                Ministérios
-                            </span>
-                            <p className="max-w-[85%] text-base sm:text-xl font-semibold text-black tracking-wide leading-[1.2]">
-                                Escala de Voluntários: Confira quem serve no próximo domingo
-                            </p>
-                        </div>
-                    </div>
-
+                        )
+                    )}
                 </div>
             </section>
 
             {/* CARROSSEL */}
-{/* CARROSSEL */}
-{/* CARROSSEL */}
-<section className="w-full flex items-center justify-between gap-3 sm:gap-5 my-16 sm:my-20 lg:my-30">
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 flex-1 min-w-0">
-        {/* Card 1 - sempre visível */}
-        <div className="relative aspect-[5/3] rounded-xl overflow-hidden">
-            <Image
-                src="/img/comunicados/carrossel.png"
-                alt="Escala de Voluntários"
-                fill
-                className="object-cover"
-            />
-            <div className="absolute inset-0 bg-black/60" />
-            <div className="absolute bottom-5 left-4 right-4 flex flex-col justify-center items-start gap-1">
-                <span className="flex justify-center items-center text-xs font-semibold text-white bg-[#FF7700]/40 backdrop-blur-sm px-3 py-1 rounded-full">
-                    Eventos
-                </span>
-                <p className="text-sm font-semibold text-white tracking-wide leading-[1.2]">
-                    Escala de Voluntários: Confira quem serve no próximo domingo
-                </p>
-            </div>
-        </div>
+            <section className="w-full flex items-center justify-between gap-3 sm:gap-5 my-16 sm:my-20 lg:my-30">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 flex-1 min-w-0">
+                    {carouselLoading || !carouselAnnouncements
+                        ? <p className="text-black/60">Carregando...</p>
+                        : visibleCarouselAnnouncements.map((announcement, index) => (
+                            <ComunicadoCarouselCard
+                                key={announcement.id}
+                                image={announcement.image ?? FALLBACK_ANNOUNCEMENT_IMAGE}
+                                imageAlt={announcement.title}
+                                badgeLabel={announcement.category}
+                                title={announcement.title}
+                                visibleFrom={CAROUSEL_BREAKPOINTS[index] ?? "xl"}
+                            />
+                        ))}
+                </div>
 
-        {/* Card 2 - some no mobile, aparece a partir de sm */}
-        <div className="hidden sm:block relative aspect-[5/3] rounded-xl overflow-hidden">
-            <Image
-                src="/img/comunicados/carrossel.png"
-                alt="Escala de Voluntários"
-                fill
-                className="object-cover"
-            />
-            <div className="absolute inset-0 bg-black/60" />
-            <div className="absolute bottom-5 left-4 right-4 flex flex-col justify-center items-start gap-1">
-                <span className="flex justify-center items-center text-xs font-semibold text-white bg-[#FF7700]/40 backdrop-blur-sm px-3 py-1 rounded-full">
-                    Eventos
-                </span>
-                <p className="text-sm font-semibold text-white tracking-wide leading-[1.2]">
-                    Escala de Voluntários: Confira quem serve no próximo domingo
-                </p>
-            </div>
-        </div>
+                <AnnouncementCarouselArrows
+                    onNext={() => canGoNextPage && setCarouselPage((p) => p + 1)}
+                    onPrevious={() => canGoPreviousPage && setCarouselPage((p) => p - 1)}
+                    canGoNext={canGoNextPage}
+                    canGoPrevious={canGoPreviousPage}
+                />
+            </section>
 
-        {/* Card 3 - some até md, aparece a partir de lg */}
-        <div className="hidden lg:block relative aspect-[5/3] rounded-xl overflow-hidden">
-            <Image
-                src="/img/comunicados/carrossel.png"
-                alt="Escala de Voluntários"
-                fill
-                className="object-cover"
-            />
-            <div className="absolute inset-0 bg-black/60" />
-            <div className="absolute bottom-5 left-4 right-4 flex flex-col justify-center items-start gap-1">
-                <span className="flex justify-center items-center text-xs font-semibold text-white bg-[#FF7700]/40 backdrop-blur-sm px-3 py-1 rounded-full">
-                    Eventos
-                </span>
-                <p className="text-sm font-semibold text-white tracking-wide leading-[1.2]">
-                    Escala de Voluntários: Confira quem serve no próximo domingo
-                </p>
-            </div>
-        </div>
-
-        {/* Card 4 - some até lg, aparece só em telas bem largas */}
-        <div className="hidden xl:block relative aspect-[5/3] rounded-xl overflow-hidden">
-            <Image
-                src="/img/comunicados/carrossel.png"
-                alt="Escala de Voluntários"
-                fill
-                className="object-cover"
-            />
-            <div className="absolute inset-0 bg-black/60" />
-            <div className="absolute bottom-5 left-4 right-4 flex flex-col justify-center items-start gap-1">
-                <span className="flex justify-center items-center text-xs font-semibold text-white bg-[#FF7700]/40 backdrop-blur-sm px-3 py-1 rounded-full">
-                    Eventos
-                </span>
-                <p className="text-sm font-semibold text-white tracking-wide leading-[1.2]">
-                    Escala de Voluntários: Confira quem serve no próximo domingo
-                </p>
-            </div>
-        </div>
-    </div>
-
-    {/* Botão seta */}
-    <button className="flex items-center justify-center py-1 px-5 rounded-full bg-[#701513] shrink-0 hover:opacity-90 transition-opacity">
-        <MoveRight size={32} className="text-white" />
-    </button>
-</section>
             {/* CALENDÁRIO + LEGENDA */}
             <section className="w-full flex flex-col lg:flex-row gap-8 my-16 sm:my-20 lg:my-30">
 
@@ -210,39 +148,61 @@ export default function Comunicados() {
                         </p>
                     </div>
 
-                    {/* componente do calendário aqui */}
                     <div className="w-full overflow-x-auto">
                         <EventCalendar />
                     </div>
                 </div>
 
-                {/* Bloco 2: legenda */}
-                <div className="flex flex-row lg:flex-col items-start lg:items-end justify-start gap-4 flex-wrap">
-                    <span className="text-sm text-black/60 w-full lg:w-auto lg:text-right">Legenda:</span>
+                {/* Bloco 2: legenda — desktop (lg+): sempre visível ao lado do calendário */}
+                <div className="hidden lg:flex flex-col items-end justify-start gap-4">
+                    <span className="text-sm text-black/60 text-right">Legenda:</span>
+                    <div className="flex flex-col gap-3">
+                        {calendarCategories.map((category) => (
+                            <CalendarLegendItem key={category.key} color={category.color} label={category.label} />
+                        ))}
+                    </div>
+                </div>
 
-                    <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto">
-                        <div className="relative flex items-center gap-3 w-full sm:w-56 lg:w-72">
-                            <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#E8B923] shrink-0 z-10" />
-                            <span className="absolute left-4 sm:left-5 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-[#E8B923]" />
-                            <span className="relative z-10 bg-white text-sm font-medium text-black border border-[#E8B923] rounded-full px-4 py-1 whitespace-nowrap">
-                                Missas e Liturgia
-                            </span>
-                        </div>
+                {/* Bloco 2: legenda — abaixo de lg: some e vira um botão que abre um painel flutuante */}
+                <div className="lg:hidden">
+                    <button
+                        onClick={() => setIsLegendOpen(true)}
+                        className="flex items-center gap-2 text-sm font-medium text-[#701513] border border-[#701513] rounded-full px-4 py-2 hover:bg-[#701513]/5 transition-colors"
+                    >
+                        <Info size={16} />
+                        Ver Legenda
+                    </button>
 
-                        <div className="relative flex items-center gap-3 w-full sm:w-56 lg:w-72">
-                            <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#701513] shrink-0 z-10" />
-                            <span className="absolute left-4 sm:left-5 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-[#701513]" />
-                            <span className="relative z-10 bg-white text-sm font-medium text-black border border-[#701513] rounded-full px-4 py-1 whitespace-nowrap">
-                                Eventos e Festas
-                            </span>
-                        </div>
+                    {/* Overlay + painel flutuante */}
+                    <div
+                        className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center transition-opacity duration-300 ${
+                            isLegendOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                        }`}
+                    >
+                        <div
+                            className="absolute inset-0 bg-black/40"
+                            onClick={() => setIsLegendOpen(false)}
+                        />
 
-                        <div className="relative flex items-center gap-3 w-full sm:w-56 lg:w-72">
-                            <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#1E3A5F] shrink-0 z-10" />
-                            <span className="absolute left-4 sm:left-5 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-[#1E3A5F]" />
-                            <span className="relative z-10 bg-white text-sm font-medium text-black border border-[#1E3A5F] rounded-full px-4 py-1 whitespace-nowrap">
-                                Pastorais e Cursos
-                            </span>
+                        <div
+                            className={`relative bg-white rounded-2xl p-5 m-4 w-full max-w-xs shadow-xl transition-all duration-300 ease-out ${
+                                isLegendOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                            }`}
+                        >
+                            <button
+                                onClick={() => setIsLegendOpen(false)}
+                                aria-label="Fechar legenda"
+                                className="absolute top-3 right-3 text-black/60 hover:text-black transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+
+                            <span className="text-sm text-black/60 block mb-3">Legenda:</span>
+                            <div className="flex flex-col gap-3">
+                                {calendarCategories.map((category) => (
+                                    <CalendarLegendItem key={category.key} color={category.color} label={category.label} />
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
