@@ -1,40 +1,54 @@
+"use client"
+
 import Container from "@/components/layout/Container";
-import { ArrowUpRight } from "lucide-react"
+import { PatternedPanel } from "@/components/ui/layout/PaternedPanel";
+import { NewsletterForm } from "@/components/ui/form/NewsletterForm";
+import ContactHighlightCard from "@/components/ui/cards/ContactHighlightCard";
+import ContactActionCard from "@/components/ui/cards/ContactActionCard";
+import Button from "@/components/ui/buttons/Button";
+import { useContactHighlights } from "@/hooks/useContactHighlights";
+import { useContactActions } from "@/hooks/useContactActions";
+import { useContactInfo } from "@/hooks/useContactInfo";
 
 export default function Contato() {
+  const { data: highlights, loading: highlightsLoading } = useContactHighlights();
+  const { data: actions, loading: actionsLoading } = useContactActions();
+  const { data: info, loading: infoLoading } = useContactInfo();
 
     return (
-        <Container className="w-full min-h-screen mt-20 pt-20">
+        <Container className="w-full min-h-screen mt-20">
               <div className="diagnostico flex flex-col lg:flex-row justify-between items-start w-full py-10 md:py-20 gap-12 lg:gap-6">
 
           <div className="flex w-full lg:w-[45%] justify-center items-start gap-8 flex-col">
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl text-start font-semibold">
-              Vamos conversar sobre a gestão{" "}
-              <span className="text-[rgb(var(--brand-secondary))]">da sua empresa</span>
-            </h3>
-            <p className="text-start text-[rgb(var(--text-secondary)/0.5)] w-full sm:w-[83%]">
-              Entenda como a CHP Smart pode ajudar você a ter mais clareza, organização e segurança nas decisões do dia a dia.
-            </p>
-            <div className="flex justify-center items-start flex-col">
-              <h4 className="text-start text-[rgb(var(--text-secondary)/0.5)]">Email:</h4>
-              <p>chepli@italy.com.br</p>
-            </div>
-            <div className="flex justify-center items-start flex-col">
-              <h4 className="text-start text-[rgb(var(--text-secondary)/0.5)]">Telefone:</h4>
-              <p>+55 (11) 91102-1278</p>
-            </div>
-            <a
-              className="group relative overflow-hidden bg-black text-white border border-black p-3 pl-6 flex justify-center items-center gap-5 rounded-full transition-colors duration-300 hover:text-black"
-              href="https://wa.me/5511911021278"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="absolute inset-0 bg-white origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-in-out rounded-full" aria-hidden="true" />
-              <span className="relative z-10">Falar com a CHP Smart</span>
-              <div className="relative z-10 flex justify-center items-center bg-white text-black p-3 rounded-full transition-colors duration-300 group-hover:bg-black group-hover:text-white">
-                <ArrowUpRight />
-              </div>
-            </a>
+            {infoLoading || !info ? (
+              <p>Carregando informações de contato...</p>
+            ) : (
+              <>
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl text-start font-semibold">
+                  {info.titleLine}{" "}
+                  <span className="text-[#701513]">{info.titleHighlight}</span>
+                </h3>
+                <p className="text-start text-black/60 w-full sm:w-[83%]">
+                  {info.description}
+                </p>
+                <div className="flex justify-center items-start flex-col">
+                  <h4 className="text-start text-black/60">Email:</h4>
+                  <p>{info.email}</p>
+                </div>
+                <div className="flex justify-center items-start flex-col">
+                  <h4 className="text-start text-black/60">Telefone:</h4>
+                  <p>{info.phone}</p>
+                </div>
+                <Button
+                  variant="primary"
+                  href={info.whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {info.whatsappLabel}
+                </Button>
+              </>
+            )}
           </div>
 
           <div className="w-full lg:w-[42%]">
@@ -80,22 +94,58 @@ export default function Contato() {
               </div>
 
               <div className="w-full flex justify-end pt-2">
-                <button
-                  className="group relative overflow-hidden bg-black text-white border border-black p-3 pl-6 flex justify-center items-center gap-5 rounded-full transition-colors duration-300 hover:text-black disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  <span className="absolute inset-0 bg-white origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-in-out rounded-full" aria-hidden="true" />
-                  <span className="relative z-10">
-                     Quero Conversar
-                  </span>
-                  <div className="relative z-10 flex justify-center items-center bg-white text-black p-3 rounded-full transition-colors duration-300 group-hover:bg-black group-hover:text-white">
-                    <ArrowUpRight />
-                  </div>
-                </button>
+                <Button type="submit" variant="primary" icon>
+                  {info?.formButtonLabel ?? "Quero Conversar"}
+                </Button>
               </div>
 
             </div>
           </div>
 
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 w-full py-6 lg:py-10">
+          {highlightsLoading || !highlights ? (
+            <p className="col-span-full">Carregando informações de contato...</p>
+          ) : (
+            highlights.map((highlight) => (
+              <ContactHighlightCard key={highlight.id} highlight={highlight} />
+            ))
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 w-full pb-10 lg:pb-20">
+          {actionsLoading || !actions ? (
+            <p className="col-span-full">Carregando ações...</p>
+          ) : (
+            actions.map((action) => (
+              <ContactActionCard key={action.id} action={action} />
+            ))
+          )}
+        </div>
+
+        <div className="w-full py-6 lg:py-10">
+          <PatternedPanel className="flex-col! w-full py-16 sm:py-20 lg:py-24 px-6 sm:px-10">
+            <div className="flex flex-col justify-center items-center gap-5 text-center w-full max-w-3xl mx-auto">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight">
+                Sua generosidade transforma vidas e leva esperança.
+              </h2>
+              <p className="text-base sm:text-lg text-black/60 leading-[1.3] w-full sm:w-[90%]">
+                Contribua para a manutenção do nosso templo e ajude a criar um ambiente
+                acolhedor para que todos possam celebrar a fé com dignidade.
+              </p>
+              <NewsletterForm
+                placeholder="Clique aqui para contribuir com nossas obras sociais."
+                buttonLabel="Contribuir"
+                size="lg"
+                className="w-full"
+                onSubmit={(value) => {
+                  // ex: chamar API/checkout de doação
+                  console.log("Contribuir:", value);
+                }}
+              />
+            </div>
+          </PatternedPanel>
         </div>
         </Container>
     );

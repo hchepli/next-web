@@ -1,11 +1,23 @@
 import { ArrowUpRight } from "lucide-react";
-import { ButtonHTMLAttributes } from "react";
+import { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type CommonProps = {
   variant?: "primary" | "secondary" | "secondary-dark";
   icon?: boolean;
   size?: "default" | "sm";
-}
+};
+
+type ButtonAsButton = CommonProps &
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    href?: undefined;
+  };
+
+type ButtonAsAnchor = CommonProps &
+  AnchorHTMLAttributes<HTMLAnchorElement> & {
+    href: string;
+  };
+
+type ButtonProps = ButtonAsButton | ButtonAsAnchor;
 
 export default function Button({
   variant = "primary",
@@ -38,11 +50,10 @@ export default function Button({
     sm: "py-2 px-4 text-sm",
   };
 
-  return (
-    <button
-      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
-      {...props}
-    >
+  const combinedClassName = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+
+  const content = (
+    <>
       <span
         aria-hidden
         className={`absolute inset-0 -z-10 origin-left scale-x-0 transform transition-transform duration-300 ease-out group-hover:scale-x-100 ${overlays[variant]}`}
@@ -52,6 +63,21 @@ export default function Button({
         {children}
         {icon && <ArrowUpRight size={18} />}
       </span>
+    </>
+  );
+
+  if ("href" in props && props.href) {
+    const { href, ...anchorProps } = props as ButtonAsAnchor;
+    return (
+      <a href={href} className={combinedClassName} {...anchorProps}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button className={combinedClassName} {...(props as ButtonAsButton)}>
+      {content}
     </button>
   );
 }
