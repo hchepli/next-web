@@ -6,6 +6,14 @@ export const navigation: NavItem[] = [
     href: "/",
   },
   {
+    title: "Calendário",
+    href: "/calendario",
+  },
+  {
+    title: "Eventos",
+    href: "/eventos"
+  },
+  {
     title: "Comunicados",
     href: "/comunicados",
   },

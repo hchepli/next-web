@@ -4,6 +4,7 @@ export interface Event {
   id: string;
   name: string;
   description: string | null;
+  category: string; // ex: "Festa", "Missa Especial", "Encontro de Pastoral"
   startDate: string; // ISO date string
   endDate: string | null;
   location: string | null;
