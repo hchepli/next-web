@@ -2,6 +2,7 @@ import { Mass } from "./mass";
 
 export interface Event {
   id: string;
+  slug: string;
   name: string;
   description: string | null;
   category: string; // ex: "Festa", "Missa Especial", "Encontro de Pastoral"

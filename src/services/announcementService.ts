@@ -44,3 +44,14 @@ export async function getCarouselAnnouncements(): Promise<Announcement[]> {
   const offset = 1 + SIDEBAR_LIMIT;
   return sorted.slice(offset);
 }
+
+// Retorna um comunicado específico para a página /comunicados/[slug].
+// TODO: quando o backend existir, trocar o corpo por:
+// const response = await fetch(`/api/comunicados/${slug}`);
+// if (!response.ok) return null;
+// return response.json();
+export async function getAnnouncementDetail(slug: string): Promise<Announcement | null> {
+  await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
+
+  return announcementMock.find((announcement) => announcement.slug === slug) ?? null;
+}

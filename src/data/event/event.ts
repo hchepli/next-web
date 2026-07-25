@@ -13,6 +13,7 @@ function daysFromNow(days: number, hour: number = 19): string {
 export const eventMock: Event[] = [
   {
     id: "event-1",
+    slug: "festa-de-sao-jose",
     name: "Festa de São José",
     description: "Celebração em honra ao padroeiro, com missa solene e procissão pelas ruas da comunidade.",
     category: "Festa",
@@ -23,6 +24,7 @@ export const eventMock: Event[] = [
   },
   {
     id: "event-2",
+    slug: "retiro-de-quaresma",
     name: "Retiro de Quaresma",
     description: "Encontro de reflexão e oração preparatório para a Semana Santa.",
     category: "Retiro",
@@ -33,6 +35,7 @@ export const eventMock: Event[] = [
   },
   {
     id: "event-3",
+    slug: "vigilia-da-comunidade",
     name: "Vigília da Comunidade",
     description: "Noite de oração, louvor e partilha aberta a todos os grupos de pastoral.",
     category: "Encontro de Pastoral",
@@ -43,6 +46,7 @@ export const eventMock: Event[] = [
   },
   {
     id: "event-4",
+    slug: "encontro-de-catequistas",
     name: "Encontro de Catequistas",
     description: "Formação continuada para os catequistas de todas as turmas da paróquia.",
     category: "Encontro de Pastoral",
@@ -53,6 +57,7 @@ export const eventMock: Event[] = [
   },
   {
     id: "event-5",
+    slug: "festa-de-natal",
     name: "Festa de Natal",
     description: "Veja os próximos horários de missa e os avisos atualizados da paróquia.",
     category: "Festa",
@@ -63,6 +68,7 @@ export const eventMock: Event[] = [
   },
   {
     id: "event-6",
+    slug: "vespera-de-ano-novo",
     name: "Véspera de Ano Novo",
     description: "Curta a véspera de ano novo com Deus e com toda a nossa comunidade.",
     category: "Festa",

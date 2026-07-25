@@ -4,6 +4,7 @@ import { EventStatus } from "@/types/event/eventListItem";
 import { formatEventDate, formatEventTime } from "@/utils/date";
 
 interface EventListCardProps {
+    slug: string;
     name: string;
     description: string;
     category: string;
@@ -14,6 +15,7 @@ interface EventListCardProps {
 }
 
 export default function EventListCard({
+    slug,
     name,
     description,
     category,
@@ -95,7 +97,7 @@ export default function EventListCard({
 
             {/* Ação */}
             <div className="flex sm:flex-col items-start sm:items-end justify-end sm:justify-center gap-2 shrink-0">
-                <Button variant={isPast ? "secondary-dark" : "primary"} size="sm" icon>
+                <Button href={`/eventos/${slug}`} variant={isPast ? "secondary-dark" : "primary"} size="sm" icon>
                     Ver Detalhes
                 </Button>
             </div>

@@ -46,6 +46,7 @@ export default function Comunicados() {
                     </div>
                 ) : (
                     <ComunicadoHero
+                        slug={featuredAnnouncement.slug}
                         image={featuredAnnouncement.image ?? FALLBACK_ANNOUNCEMENT_IMAGE}
                         imageAlt={featuredAnnouncement.title}
                         badgeLabel={featuredAnnouncement.category}
@@ -69,6 +70,7 @@ export default function Comunicados() {
                     ) : (
                         sidebarAnnouncements[0] && (
                             <NewsSidebarCard
+                                slug={sidebarAnnouncements[0].slug}
                                 image={sidebarAnnouncements[0].image ?? FALLBACK_ANNOUNCEMENT_IMAGE}
                                 imageAlt={sidebarAnnouncements[0].title}
                                 badgeLabel={sidebarAnnouncements[0].category}
@@ -91,6 +93,7 @@ export default function Comunicados() {
                     {sidebarLoading || !sidebarAnnouncements ? null : (
                         sidebarAnnouncements[1] && (
                             <NewsSidebarCard
+                                slug={sidebarAnnouncements[1].slug}
                                 image={sidebarAnnouncements[1].image ?? FALLBACK_ANNOUNCEMENT_IMAGE}
                                 imageAlt={sidebarAnnouncements[1].title}
                                 badgeLabel={sidebarAnnouncements[1].category}
@@ -109,6 +112,7 @@ export default function Comunicados() {
                         : visibleCarouselAnnouncements.map((announcement, index) => (
                             <ComunicadoCarouselCard
                                 key={announcement.id}
+                                slug={announcement.slug}
                                 image={announcement.image ?? FALLBACK_ANNOUNCEMENT_IMAGE}
                                 imageAlt={announcement.title}
                                 badgeLabel={announcement.category}

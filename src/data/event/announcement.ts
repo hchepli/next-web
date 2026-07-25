@@ -3,9 +3,11 @@ import { Announcement } from "@/types/event/announcement";
 export const announcementMock: Announcement[] = [
   {
     id: "announcement-1",
+    slug: "congresso-de-familias-2026",
     title:
       "Vem aí o Congresso de Famílias 2026: Inscrições abertas para um final de semana de renovação.",
-    content: "",
+    content:
+      "A paróquia convida todas as famílias para o Congresso de Famílias 2026, um final de semana dedicado à oração, formação e convivência. Serão palestras, momentos de partilha entre casais e atividades para crianças e jovens, com o objetivo de fortalecer os laços familiares à luz da fé. As inscrições podem ser feitas na secretaria paroquial ou diretamente com os coordenadores de pastoral.",
     category: "Ministerios",
     image: "/img/comunicados/noticia.png",
     authorId: null,
@@ -13,8 +15,10 @@ export const announcementMock: Announcement[] = [
   },
   {
     id: "announcement-2",
+    slug: "escala-de-voluntarios-1",
     title: "Escala de Voluntários: Confira quem serve no próximo domingo",
-    content: "",
+    content:
+      "Confira abaixo a escala de voluntários para o próximo domingo. Pedimos que os escalados confirmem presença com antecedência junto à coordenação de suas pastorais. Em caso de indisponibilidade, avise o quanto antes para que possamos organizar a substituição.",
     category: "Ministerios",
     image: "/img/comunicados/ministerios.png",
     authorId: null,
@@ -22,8 +26,10 @@ export const announcementMock: Announcement[] = [
   },
   {
     id: "announcement-3",
+    slug: "escala-de-voluntarios-2",
     title: "Escala de Voluntários: Confira quem serve no próximo domingo",
-    content: "",
+    content:
+      "Confira abaixo a escala de voluntários para o próximo domingo. Pedimos que os escalados confirmem presença com antecedência junto à coordenação de suas pastorais. Em caso de indisponibilidade, avise o quanto antes para que possamos organizar a substituição.",
     category: "Ministerios",
     image: "/img/comunicados/ministerios.png",
     authorId: null,
@@ -31,8 +37,10 @@ export const announcementMock: Announcement[] = [
   },
   {
     id: "announcement-4",
+    slug: "escala-de-voluntarios-3",
     title: "Escala de Voluntários: Confira quem serve no próximo domingo",
-    content: "",
+    content:
+      "Confira abaixo a escala de voluntários para o próximo domingo. Pedimos que os escalados confirmem presença com antecedência junto à coordenação de suas pastorais. Em caso de indisponibilidade, avise o quanto antes para que possamos organizar a substituição.",
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
@@ -40,8 +48,10 @@ export const announcementMock: Announcement[] = [
   },
   {
     id: "announcement-5",
+    slug: "escala-de-voluntarios-4",
     title: "Escala de Voluntários: Confira quem serve no próximo domingo",
-    content: "",
+    content:
+      "Confira abaixo a escala de voluntários para o próximo domingo. Pedimos que os escalados confirmem presença com antecedência junto à coordenação de suas pastorais. Em caso de indisponibilidade, avise o quanto antes para que possamos organizar a substituição.",
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
@@ -49,8 +59,10 @@ export const announcementMock: Announcement[] = [
   },
   {
     id: "announcement-6",
+    slug: "escala-de-voluntarios-5",
     title: "Escala de Voluntários: Confira quem serve no próximo domingo",
-    content: "",
+    content:
+      "Confira abaixo a escala de voluntários para o próximo domingo. Pedimos que os escalados confirmem presença com antecedência junto à coordenação de suas pastorais. Em caso de indisponibilidade, avise o quanto antes para que possamos organizar a substituição.",
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
@@ -58,8 +70,10 @@ export const announcementMock: Announcement[] = [
   },
   {
     id: "announcement-7",
+    slug: "escala-de-voluntarios-6",
     title: "Escala de Voluntários: Confira quem serve no próximo domingo",
-    content: "",
+    content:
+      "Confira abaixo a escala de voluntários para o próximo domingo. Pedimos que os escalados confirmem presença com antecedência junto à coordenação de suas pastorais. Em caso de indisponibilidade, avise o quanto antes para que possamos organizar a substituição.",
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
@@ -67,8 +81,10 @@ export const announcementMock: Announcement[] = [
   },
   {
     id: "announcement-8",
+    slug: "escala-de-voluntarios-7",
     title: "Escala de Voluntários: Confira quem serve no próximo domingo",
-    content: "",
+    content:
+      "Confira abaixo a escala de voluntários para o próximo domingo. Pedimos que os escalados confirmem presença com antecedência junto à coordenação de suas pastorais. Em caso de indisponibilidade, avise o quanto antes para que possamos organizar a substituição.",
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
@@ -76,8 +92,10 @@ export const announcementMock: Announcement[] = [
   },
   {
     id: "announcement-9",
+    slug: "escala-de-voluntarios-8",
     title: "Escala de Voluntários: Confira quem serve no próximo domingo",
-    content: "",
+    content:
+      "Confira abaixo a escala de voluntários para o próximo domingo. Pedimos que os escalados confirmem presença com antecedência junto à coordenação de suas pastorais. Em caso de indisponibilidade, avise o quanto antes para que possamos organizar a substituição.",
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,

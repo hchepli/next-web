@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface ComunicadoHeroProps {
+  slug: string;
   image: string;
   imageAlt: string;
   badgeLabel: string;
@@ -8,13 +10,17 @@ interface ComunicadoHeroProps {
 }
 
 export default function ComunicadoHero({
+  slug,
   image,
   imageAlt,
   badgeLabel,
   title,
 }: ComunicadoHeroProps) {
   return (
-    <div className="w-full h-full min-w-0 relative rounded-2xl overflow-hidden aspect-[16/10]">
+    <Link
+      href={`/comunicados/${slug}`}
+      className="w-full h-full min-w-0 relative rounded-2xl overflow-hidden aspect-[16/10] block"
+    >
       <Image src={image} alt={imageAlt} fill className="object-cover" priority />
       <div className="absolute inset-0 bg-black/40" />
       <div className="absolute bottom-10 sm:bottom-16 lg:bottom-25 left-5 sm:left-8 lg:left-10 right-5 sm:right-8 flex flex-col items-start gap-3">
@@ -25,6 +31,6 @@ export default function ComunicadoHero({
           {title}
         </h1>
       </div>
-    </div>
+    </Link>
   );
 }

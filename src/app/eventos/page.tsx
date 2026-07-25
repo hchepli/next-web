@@ -62,6 +62,7 @@ export default function Eventos() {
                                         cards.push(
                                             <EventListCard
                                                 key={event.id}
+                                                slug={event.slug}
                                                 name={event.name}
                                                 description={event.description}
                                                 category={event.category}

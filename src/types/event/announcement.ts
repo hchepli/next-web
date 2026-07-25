@@ -2,6 +2,7 @@ import { User } from "../user/user";
 
 export interface Announcement {
   id: string;
+  slug: string;
   title: string;
   content: string;
   category: string,

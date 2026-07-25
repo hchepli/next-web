@@ -1,6 +1,6 @@
 export interface Photo {
   id: string;
-  eventId: string;
+  albumId: string;
   url: string;
   description: string | null;
   isCover: boolean;

@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface ComunicadoCarouselCardProps {
+  slug: string;
   image: string;
   imageAlt: string;
   badgeLabel: string;
@@ -17,6 +19,7 @@ const visibilityClasses: Record<NonNullable<ComunicadoCarouselCardProps["visible
 };
 
 export default function ComunicadoCarouselCard({
+  slug,
   image,
   imageAlt,
   badgeLabel,
@@ -25,7 +28,8 @@ export default function ComunicadoCarouselCard({
   className = "",
 }: ComunicadoCarouselCardProps) {
   return (
-    <div
+    <Link
+      href={`/comunicados/${slug}`}
       className={`${visibilityClasses[visibleFrom]} relative aspect-[5/3] rounded-xl overflow-hidden ${className}`}
     >
       <Image src={image} alt={imageAlt} fill className="object-cover" />
@@ -38,6 +42,6 @@ export default function ComunicadoCarouselCard({
           {title}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }

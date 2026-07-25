@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface NewsSidebarCardProps {
+  slug: string;
   image: string;
   imageAlt: string;
   badgeLabel: string;
@@ -8,13 +10,14 @@ interface NewsSidebarCardProps {
 }
 
 export default function NewsSidebarCard({
+  slug,
   image,
   imageAlt,
   badgeLabel,
   title,
 }: NewsSidebarCardProps) {
   return (
-    <div className="flex items-stretch justify-center gap-4 min-w-0">
+    <Link href={`/comunicados/${slug}`} className="flex items-stretch justify-center gap-4 min-w-0">
       <div className="relative w-[clamp(4.5rem,16vw,7rem)] h-[clamp(4.5rem,16vw,7rem)] shrink-0 rounded-lg overflow-hidden">
         <Image src={image} alt={imageAlt} fill className="object-cover" />
       </div>
@@ -26,6 +29,6 @@ export default function NewsSidebarCard({
           {title}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }
