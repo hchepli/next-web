@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User } from "lucide-react";
+import { User, ChevronDown } from "lucide-react";
 import { navigation } from "@/data/navigation";
 
 export default function HeaderComponent() {
@@ -12,6 +12,27 @@ export default function HeaderComponent() {
     const [hideHeader, setHideHeader] = useState(false);
     const [isAtTop, setIsAtTop] = useState(true);
     const lastScrollY = useRef(0);
+
+    // Dropdown desktop (ex: "Pastorais"): controla qual item está aberto.
+    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+    const dropdownRef = useRef<HTMLLIElement>(null);
+
+    // Submenu mobile (accordion dentro do menu mobile).
+    const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
+
+    // Fecha o dropdown desktop ao clicar fora dele.
+    useEffect(() => {
+        if (!openDropdown) return;
+
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setOpenDropdown(null);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [openDropdown]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -50,6 +71,16 @@ export default function HeaderComponent() {
             document.body.style.overflow = "";
         };
     }, [isOpen]);
+
+    const handleToggleMobileMenu = () => {
+        setIsOpen((prev) => {
+            const next = !prev;
+            if (!next) {
+                setOpenMobileSubmenu(null);
+            }
+            return next;
+        });
+    };
 
     const isHome = pathname === "/";
     const transparent = isHome && isAtTop && !isOpen;
@@ -123,7 +154,77 @@ export default function HeaderComponent() {
             <nav className="hidden min-[1050px]:block">
                 <ul className="flex items-center gap-6">
                     {navigation.map((item) => {
-                        const active = pathname === item.href;
+                        const hasChildren = !!item.children?.length;
+                        const active =
+                            pathname === item.href ||
+                            (hasChildren && item.children!.some((child) => pathname === child.href));
+
+                        if (hasChildren) {
+                            const isDropdownOpen = openDropdown === item.href;
+                            return (
+                                <li
+                                    key={item.href}
+                                    ref={isDropdownOpen ? dropdownRef : undefined}
+                                    className="relative"
+                                    onMouseEnter={() => setOpenDropdown(item.href)}
+                                    onMouseLeave={() => setOpenDropdown(null)}
+                                >
+                                    <button
+                                        type="button"
+                                        className={`${linkClass(item.href)} flex items-center gap-1`}
+                                        onClick={() =>
+                                            setOpenDropdown(isDropdownOpen ? null : item.href)
+                                        }
+                                        aria-expanded={isDropdownOpen}
+                                        aria-haspopup="true"
+                                    >
+                                        {item.title}
+                                        <ChevronDown
+                                            size={16}
+                                            className={`transition-transform duration-200 ${
+                                                isDropdownOpen ? "rotate-180" : ""
+                                            }`}
+                                        />
+                                        <span className={underlineClass(item.href, active)} />
+                                    </button>
+
+                                    {/* Wrapper com padding-top (em vez de margin no <ul>) para que o
+                                        espaço entre o botão e o dropdown continue "dentro" da área
+                                        hoverável, evitando que o mouse dispare mouseleave no meio do
+                                        caminho e feche o menu antes de chegar nas opções. */}
+                                    <div
+                                        className={`absolute left-0 top-full pt-3 ${
+                                            isDropdownOpen ? "" : "pointer-events-none"
+                                        }`}
+                                    >
+                                        <ul
+                                            className={`min-w-[220px] rounded-xl border border-gray-200 bg-white py-2 shadow-lg transition-all duration-200 origin-top ${
+                                                isDropdownOpen
+                                                    ? "opacity-100 scale-100"
+                                                    : "opacity-0 scale-95"
+                                            }`}
+                                        >
+                                            {item.children!.map((child) => (
+                                                <li key={child.href}>
+                                                    <Link
+                                                        href={child.href}
+                                                        onClick={() => setOpenDropdown(null)}
+                                                        className={`block px-4 py-2 text-sm transition-colors ${
+                                                            pathname === child.href
+                                                                ? "text-black font-semibold"
+                                                                : "text-black/60 hover:text-black hover:bg-gray-50"
+                                                        }`}
+                                                    >
+                                                        {child.title}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </li>
+                            );
+                        }
+
                         return (
                             <li key={item.href}>
                                 <Link
@@ -153,7 +254,7 @@ export default function HeaderComponent() {
             {/* Botão Mobile */}
             <button
                 className="relative z-[60] flex h-8 w-8 flex-col items-center justify-center gap-[6px] min-[1050px]:hidden"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={handleToggleMobileMenu}
                 aria-label="Abrir menu"
             >
                 <span
@@ -184,17 +285,64 @@ export default function HeaderComponent() {
                 }`}
             >
                 <ul className="flex flex-col items-center gap-3 px-6 py-8">
-                    {navigation.map((item) => (
-                        <li key={item.href}>
-                            <Link
-                                href={item.href}
-                                className={mobileLinkClass(item.href)}
-                                onClick={() => setIsOpen(false)}
-                            >
-                                {item.title}
-                            </Link>
-                        </li>
-                    ))}
+                    {navigation.map((item) => {
+                        const hasChildren = !!item.children?.length;
+
+                        if (hasChildren) {
+                            const isSubmenuOpen = openMobileSubmenu === item.href;
+                            return (
+                                <li key={item.href} className="flex flex-col items-center w-full">
+                                    <button
+                                        type="button"
+                                        className={`${mobileLinkClass(item.href)} flex items-center gap-1`}
+                                        onClick={() =>
+                                            setOpenMobileSubmenu(isSubmenuOpen ? null : item.href)
+                                        }
+                                        aria-expanded={isSubmenuOpen}
+                                    >
+                                        {item.title}
+                                        <ChevronDown
+                                            size={18}
+                                            className={`transition-transform duration-200 ${
+                                                isSubmenuOpen ? "rotate-180" : ""
+                                            }`}
+                                        />
+                                    </button>
+
+                                    {isSubmenuOpen && (
+                                        <ul className="flex flex-col items-center gap-2 pt-2 pb-1">
+                                            {item.children!.map((child) => (
+                                                <li key={child.href}>
+                                                    <Link
+                                                        href={child.href}
+                                                        className="text-base text-black/60 hover:text-black transition-colors"
+                                                        onClick={() => {
+                                                            setOpenMobileSubmenu(null);
+                                                            setIsOpen(false);
+                                                        }}
+                                                    >
+                                                        {child.title}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </li>
+                            );
+                        }
+
+                        return (
+                            <li key={item.href}>
+                                <Link
+                                    href={item.href}
+                                    className={mobileLinkClass(item.href)}
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {item.title}
+                                </Link>
+                            </li>
+                        );
+                    })}
 
                     {/* <li className="mt-3">
                         <Link
