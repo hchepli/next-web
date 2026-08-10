@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Container from "@/components/layout/Container";
 import HeroSection from "@/components/sections/HeroSection";
@@ -18,17 +18,31 @@ import { useEventHeroCarousel } from "@/hooks/useEventHeroCarousel";
 import { useWeeklyScheduleCarousel } from "@/hooks/useWeeklyScheduleCarousel";
 import { useWeeklyMassSchedule } from "@/hooks/useWeeklyMassSchedule";
 import { useUpcomingEventSlides } from "@/hooks/useUpcomingEventSlides";
+import { useIsXl } from "@/hooks/useIsXl";
 
 const TRANSITION_MS = 700;
 const FADE_MS = 900;
-const CARD_WIDTH = 350;
-const GAP = 12; // gap do hero carousel de eventos
-const PARTIAL_VISIBLE = 180; // quanto do 2º card aparece cortado
-const STEP = CARD_WIDTH + GAP;
-const WINDOW_WIDTH = CARD_WIDTH + GAP + PARTIAL_VISIBLE;
 
+// dimensões do card grande (>= xl) — comportamento original
+const CARD_WIDTH = 350;
+const GAP = 12;
+const PARTIAL_VISIBLE = 180; // quanto do 2º card aparece cortado
+
+// dimensões do card pequeno, só com a imagem (< xl)
+const SMALL_CARD_WIDTH = 130; // mais retangular que o quadrado anterior (90)
+const SMALL_CARD_HEIGHT = 90; // mantido igual ao que já estava
+const SMALL_GAP = 8;
+const SMALL_PARTIAL_VISIBLE = 60;
 
 export default function Home() {
+  const isXl = useIsXl();
+
+  const activeCardWidth = isXl ? CARD_WIDTH : SMALL_CARD_WIDTH;
+  const activeGap = isXl ? GAP : SMALL_GAP;
+  const activePartialVisible = isXl ? PARTIAL_VISIBLE : SMALL_PARTIAL_VISIBLE;
+  const STEP = activeCardWidth + activeGap;
+  const WINDOW_WIDTH = activeCardWidth + activeGap + activePartialVisible;
+
   const { data: eventSlides, loading: eventsLoading } = useUpcomingEventSlides();
   const { data: weeklySchedule, loading: scheduleLoading } = useWeeklyMassSchedule();
 
@@ -73,47 +87,51 @@ export default function Home() {
         </div>
       </HeroSection>
 
-      {eventsLoading || !current ? (
-        <HeroSection backgroundImage="/img/hero/eventos-img.png" align="end">
-          <p className="text-white pl-5 sm:pl-8 md:pl-17">Carregando eventos...</p>
-        </HeroSection>
-      ) : (
-        <HeroSection backgroundImage={current.image} align="end">
-          <div className="relative flex flex-col lg:flex-row lg:justify-between w-full h-full px-5 sm:px-8 md:pl-17 pt-6 md:pt-10 lg:pt-0 pb-10 sm:pb-16 md:pb-30">
-            <EventCarouselTrack
-              items={trackItems}
-              translateX={(pos + 1) * STEP}
-              withTransition={withTransition}
-              transitionMs={TRANSITION_MS}
-              partialCardIndex={partialCardIndex}
-              nextVisible={nextVisible}
-              fadeMs={FADE_MS}
-              onTransitionEnd={handleTransitionEnd}
-              windowWidth={WINDOW_WIDTH}
-            />
+{eventsLoading || !current ? (
+  <HeroSection backgroundImage="/img/hero/eventos-img.png" align="end">
+    <p className="text-white pl-5 sm:pl-8 md:pl-17">Carregando eventos...</p>
+  </HeroSection>
+) : (
+  <HeroSection backgroundImage={current.image} align="end">
+    <EventCarouselTrack
+      items={trackItems}
+      translateX={(pos + 1) * STEP}
+      withTransition={withTransition}
+      transitionMs={TRANSITION_MS}
+      partialCardIndex={partialCardIndex}
+      nextVisible={nextVisible}
+      fadeMs={FADE_MS}
+      onTransitionEnd={handleTransitionEnd}
+      windowWidth={WINDOW_WIDTH}
+      imageOnly={!isXl}
+      cardWidth={SMALL_CARD_WIDTH}
+      cardHeight={SMALL_CARD_HEIGHT}
+      gap={activeGap}
+    />
 
-            <div className="flex flex-col justify-end flex-1 lg:order-first">
-              <HeroContent
-                key={pos % n}
-                titleLines={current.titleLines}
-                description={current.description}
-                primaryLabel="Saiba Mais"
-                secondaryLabel="Garantir Ingresso"
-              />
-            </div>
+    <div className="relative flex flex-col lg:flex-row lg:justify-between w-full h-full px-5 sm:px-8 md:pl-17 pt-6 md:pt-10 lg:pt-0 pb-10 sm:pb-16 md:pb-30">
+      <div className="flex flex-col justify-end flex-1 lg:order-first">
+        <HeroContent
+          key={pos % n}
+          titleLines={current.titleLines}
+          description={current.description}
+          primaryLabel="Saiba Mais"
+          secondaryLabel="Garantir Ingresso"
+        />
+      </div>
 
-            <CarouselIndicators
-              count={n}
-              activeIndex={pos % n}
-              onSelect={handleIndicatorClick}
-              className="hidden md:flex mt-4 lg:mt-0 lg:absolute lg:bottom-15 lg:left-17"
-            />
-          </div>
-          <Container>
-            <SectionDivider showLogo showName position="left" />
-          </Container>
-        </HeroSection>
-      )}
+      <CarouselIndicators
+        count={n}
+        activeIndex={pos % n}
+        onSelect={handleIndicatorClick}
+        className="hidden md:flex mt-4 lg:mt-0 lg:absolute lg:bottom-15 lg:left-17"
+      />
+    </div>  
+    <Container>
+      <SectionDivider showLogo showName position="left" />
+    </Container>
+  </HeroSection>
+)}
       <section className="flex flex-col lg:flex-row justify-center items-center min-h-[100dvh] lg:min-h-[65dvh] gap-5 lg:gap-0 px-6 lg:px-0">
         <TextActionBlock
           title="Com Você em Qualquer Lugar"

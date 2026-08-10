@@ -9,6 +9,9 @@ interface EventCardProps {
   onButtonClick?: () => void;
   className?: string;
   style?: CSSProperties;
+  imageOnly?: boolean;
+  width?: number;
+  height?: number;
 }
 
 export default function EventCard({
@@ -19,9 +22,26 @@ export default function EventCard({
   onButtonClick,
   className = "",
   style,
+  imageOnly = false,
+  width,
+  height,
 }: EventCardProps) {
+  if (imageOnly) {
+    return (
+      <div
+        className={`flex-shrink-0 rounded-[16px] overflow-hidden bg-black/60 ${className}`}
+        style={{ width, height, ...style }}
+      >
+        <img src={image} alt={title} className="w-full h-full object-cover" />
+      </div>
+    );
+  }
+
   return (
-    <div className={`flex flex-col justify-center items-center bg-black/60 rounded-[24px] w-[240px] md:w-[260px] lg:w-[350px] flex-shrink-0 ${className}`}>
+    <div
+      className={`flex flex-col justify-center items-center bg-black/60 rounded-[24px] w-[240px] md:w-[260px] lg:w-[350px] flex-shrink-0 ${className}`}
+      style={style}
+    >
       <div className="w-full">
         <img
           src={image}

@@ -17,6 +17,10 @@ interface EventCarouselTrackProps {
   fadeMs?: number;
   onTransitionEnd?: () => void;
   windowWidth: number | string;
+  imageOnly?: boolean;
+  cardWidth: number;
+  cardHeight?: number;
+  gap: number;
 }
 
 export function EventCarouselTrack({
@@ -29,29 +33,33 @@ export function EventCarouselTrack({
   fadeMs = 300,
   onTransitionEnd,
   windowWidth,
+  imageOnly = false,
+  cardWidth,
+  cardHeight,
+  gap,
 }: EventCarouselTrackProps) {
   return (
     <div
-      className="hidden xl:block xl:absolute xl:mb-0 xl:bottom-20 xl:right-0 overflow-hidden"
+      className={
+        imageOnly
+          ? "absolute top-[-50dvh] md:top-[-30dvh] right-0 overflow-hidden"
+          : "absolute bottom-20 right-0 overflow-hidden"
+      }
       style={{ width: windowWidth }}
     >
       <div
-        className="flex items-center gap-3"
-        onTransitionEnd={onTransitionEnd}
+        className="flex items-center"
         style={{
+          gap,
           transform: `translateX(-${translateX}px)`,
-          transition: withTransition
-            ? `transform ${transitionMs}ms ease`
-            : "none",
+          transition: withTransition ? `transform ${transitionMs}ms ease` : "none",
         }}
+        onTransitionEnd={onTransitionEnd}
       >
         {items.map((slide, i) => {
           const style: CSSProperties | undefined =
             i === partialCardIndex
-              ? {
-                opacity: nextVisible ? 1 : 0,
-                transition: `opacity ${fadeMs}ms ease`,
-              }
+              ? { opacity: nextVisible ? 1 : 0, transition: `opacity ${fadeMs}ms ease` }
               : undefined;
 
           return (
@@ -60,7 +68,10 @@ export function EventCarouselTrack({
               image={slide.image}
               title={slide.cardTitle}
               description={slide.cardDescription}
-              className="w-[350px] flex-shrink-0"
+              imageOnly={imageOnly}
+              width={imageOnly ? cardWidth : undefined}
+              height={imageOnly ? cardHeight : undefined}
+              className={imageOnly ? "" : "w-[350px]"}
               style={style}
             />
           );
