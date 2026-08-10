@@ -42,7 +42,7 @@ export function EventCarouselTrack({
     <div
       className={
         imageOnly
-          ? "absolute top-[-50dvh] md:top-[-30dvh] right-0 overflow-hidden"
+          ? "absolute top-[-40dvh] md:top-[-30dvh] right-0 overflow-hidden"
           : "absolute bottom-20 right-0 overflow-hidden"
       }
       style={{ width: windowWidth }}
