@@ -341,13 +341,6 @@ export default function HeaderComponent() {
                         </h2>
                     </div>
 
-                    <button
-                        onClick={() => setIsOpen(false)}
-                        aria-label="Fechar menu"
-                        className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-black transition hover:bg-black/10"
-                    >
-                        <X size={20} />
-                    </button>
                 </div>
 
                 {/* Lista de navegação */}
