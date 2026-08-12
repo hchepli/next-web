@@ -319,31 +319,35 @@ export default function HeaderComponent() {
 
             {/* Menu Mobile — drawer full screen: topo com identidade + lista de links com ícone */}
             <nav
-                className={`fixed inset-0 z-[55] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-17 py-4 md:py-5 lg:py-7 h-[100dvh] w-screen overflow-y-auto bg-white transition-all duration-400 ease-[cubic-bezier(.22,1,.36,1)] min-[1050px]:hidden ${
+                className={`fixed inset-0 z-[55] h-[100dvh] w-screen overflow-y-auto bg-white transition-all duration-400 ease-[cubic-bezier(.22,1,.36,1)] min-[1050px]:hidden ${
                     isOpen
                         ? "translate-x-0 opacity-100"
                         : "translate-x-4 opacity-0 pointer-events-none"
                 }`}
             >
-                {/* Topo com identidade da paróquia */}
-                <div className="relative border-b-2 border-black/20 pb-6">
-                    
+                {/* Topo com identidade da paróquia — mesmo padding/tamanho do header fixo,
+                    pra logo e nome ficarem exatamente alinhados com a posição de quando o menu está fechado. */}
+                <div className="relative border-b-2 border-black/10 px-4 sm:px-6 md:px-10 lg:px-14 xl:px-17 py-4 md:py-5 lg:py-7">
+                    <div className="flex items-center gap-2 md:gap-3 shrink-0">
+                        <img
+                            src="/img/institucional/logo.png"
+                            alt="Logo"
+                            className="w-11 sm:w-12 md:w-14 lg:w-16 xl:w-18 h-auto shrink-0"
+                        />
 
-            <div className="flex items-center gap-2 md:gap-3 shrink-0">
-                <img
-                    src="/img/institucional/logo.png"
-                    alt="Logo"
-                    className="w-11 sm:w-12 md:w-14 lg:w-16 xl:w-18 h-auto shrink-0"
-                />
+                        <h2 className="text-sm sm:text-base md:text-[15px] lg:text-lg xl:text-xl font-bold flex flex-col leading-[1.15] md:leading-5 tracking-wide md:tracking-wider text-black whitespace-nowrap">
+                            <span>Paróquia Divino</span>
+                            <span>Espírito Santo</span>
+                        </h2>
+                    </div>
 
-                <h2
-                    className={`text-sm sm:text-base md:text-[15px] lg:text-lg xl:text-xl font-bold flex flex-col leading-[1.15] md:leading-5 tracking-wide md:tracking-wider transition-colors duration-300 whitespace-nowrap text-black   
-                    }`}
-                >
-                    <span>Paróquia Divino</span>
-                    <span>Espírito Santo</span>
-                </h2>
-            </div>
+                    <button
+                        onClick={() => setIsOpen(false)}
+                        aria-label="Fechar menu"
+                        className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-black transition hover:bg-black/10"
+                    >
+                        <X size={20} />
+                    </button>
                 </div>
 
                 {/* Lista de navegação */}
