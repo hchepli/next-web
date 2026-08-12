@@ -169,7 +169,7 @@ export default function Home() {
       </section>
 
       <Container className="flex justify-center items-center">
-        <PatternedPanel>
+        <PatternedPanel className="flex flex-col lg:flex-row justify-center items-center py-10 gap-10 lg:gap-0">
           <TextActionBlock
             title="Faça sua Doação"
             description="A doação é um modo de agradecer a Deus por todas as bênçãos na nossa vida. E também é como plantamos a semente em busca de alguma graça específica."

@@ -22,13 +22,18 @@ export function NewsletterForm({
   };
 
   const textSizes = {
-    default: "text-sm sm:text-base",
-    lg: "text-base sm:text-lg",
+    default: "text-xs sm:text-base",
+    lg: "text-sm sm:text-lg",
   };
 
   const buttonPaddings = {
-    default: "px-4 sm:px-6 py-4 sm:py-5",
-    lg: "px-5 sm:px-7 py-5 sm:py-6",
+    default: "px-3 sm:px-6 py-3 sm:py-5",
+    lg: "px-4 sm:px-7 py-4 sm:py-6",
+  };
+
+  const inputPaddings = {
+    default: "py-3 sm:py-0",
+    lg: "py-4 sm:py-0",
   };
 
   const iconSizes = {
@@ -39,14 +44,14 @@ export function NewsletterForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className={`flex items-center bg-white rounded-full border border-black/10 pl-4 sm:pl-5 shadow-sm mt-2 ${className}`}
+      className={`flex items-center bg-white rounded-full border border-black/10 pl-3 sm:pl-5 shadow-sm mt-2 ${className}`}
     >
       <input
         type="email"
         name="email"
         placeholder={placeholder}
         required
-        className={`flex-1 min-w-0 bg-transparent outline-none text-black/80 placeholder:text-black/40 ${textSizes[size]}`}
+        className={`flex-1 min-w-0 bg-transparent outline-none text-black/80 placeholder:text-black/40 ${textSizes[size]} ${inputPaddings[size]}`}
       />
       <button
         type="submit"

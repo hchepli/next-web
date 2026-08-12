@@ -1,10 +1,41 @@
 "use client";
 
+import type { ComponentType } from "react";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, ChevronDown } from "lucide-react";
+import {
+    User,
+    ChevronDown,
+    X,
+    Home,
+    CalendarDays,
+    PartyPopper,
+    Megaphone,
+    Church,
+    Images,
+    HeartHandshake,
+    Info,
+    Phone,
+    Circle,
+} from "lucide-react";
 import { navigation } from "@/data/navigation";
+
+// Mapeia o título do item de navegação para um ícone lucide correspondente.
+// Ajuste as chaves conforme os títulos exatos usados em @/data/navigation.
+const NAV_ICONS: Record<string, ComponentType<{ size?: number; className?: string }>> = {
+    "Início": Home,
+    "Calendário": CalendarDays,
+    "Eventos": PartyPopper,
+    "Comunicados": Megaphone,
+    "Sacramentos": Church,
+    "Pastorais": HeartHandshake,
+    "Galeria": Images,
+    "Sobre Nós": Info,
+    "Contato": Phone,
+};
+
+const getNavIcon = (title: string) => NAV_ICONS[title] ?? Circle;
 
 export default function HeaderComponent() {
     const pathname = usePathname();
@@ -95,7 +126,7 @@ export default function HeaderComponent() {
             ? "text-black font-semibold"
             : "text-black/60 hover:text-black";
 
-        return `group relative pb-1 transition-colors duration-300 ${color}`;
+        return `group relative pb-1 whitespace-nowrap text-[13px] lg:text-[15px] xl:text-base transition-colors duration-300 ${color}`;
     };
 
     const underlineClass = (href: string, isActive: boolean) => {
@@ -124,7 +155,7 @@ export default function HeaderComponent() {
 
     return (
         <header
-            className={`fixed top-0 left-0 z-50 w-full px-6 md:px-17 py-7 flex items-center justify-between transition-all duration-300 ease-in-out ${
+            className={`fixed top-0 left-0 z-50 w-full px-4 sm:px-6 md:px-10 lg:px-14 xl:px-17 py-4 md:py-5 lg:py-7 flex items-center justify-between transition-all duration-300 ease-in-out ${
                 hideHeader ? "-translate-y-full" : "translate-y-0"
             } ${
                 transparent
@@ -133,15 +164,15 @@ export default function HeaderComponent() {
             }`}
         >
             {/* Logo */}
-            <div className="flex items-center">
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
                 <img
                     src="/img/institucional/logo.png"
                     alt="Logo"
-                    className="w-14 md:w-18 h-auto"
+                    className="w-11 sm:w-12 md:w-14 lg:w-16 xl:w-18 h-auto shrink-0"
                 />
 
                 <h2
-                    className={`text-lg md:text-xl font-bold flex flex-col leading-5 tracking-wider transition-colors duration-300 ${
+                    className={`text-sm sm:text-base md:text-[15px] lg:text-lg xl:text-xl font-bold flex flex-col leading-[1.15] md:leading-5 tracking-wide md:tracking-wider transition-colors duration-300 whitespace-nowrap ${
                         transparent ? "text-white" : "text-black"
                     }`}
                 >
@@ -152,7 +183,7 @@ export default function HeaderComponent() {
 
             {/* Desktop */}
             <nav className="hidden min-[1050px]:block">
-                <ul className="flex items-center gap-6">
+                <ul className="flex items-center gap-3 lg:gap-5 xl:gap-6">
                     {navigation.map((item) => {
                         const hasChildren = !!item.children?.length;
                         const active =
@@ -180,7 +211,7 @@ export default function HeaderComponent() {
                                     >
                                         {item.title}
                                         <ChevronDown
-                                            size={16}
+                                            size={15}
                                             className={`transition-transform duration-200 ${
                                                 isDropdownOpen ? "rotate-180" : ""
                                             }`}
@@ -193,30 +224,40 @@ export default function HeaderComponent() {
                                         hoverável, evitando que o mouse dispare mouseleave no meio do
                                         caminho e feche o menu antes de chegar nas opções. */}
                                     <div
-                                        className={`absolute left-0 top-full pt-3 ${
+                                        className={`absolute left-1/2 -translate-x-1/2 top-full pt-3 ${
                                             isDropdownOpen ? "" : "pointer-events-none"
                                         }`}
                                     >
                                         <ul
-                                            className={`min-w-[220px] rounded-xl border border-gray-200 bg-white py-2 shadow-lg transition-all duration-200 origin-top ${
+                                            className={`min-w-[240px] overflow-hidden rounded-2xl border border-gray-100 bg-white py-2 shadow-xl ring-1 ring-black/5 transition-all duration-200 origin-top ${
                                                 isDropdownOpen
-                                                    ? "opacity-100 scale-100"
-                                                    : "opacity-0 scale-95"
+                                                    ? "opacity-100 scale-100 translate-y-0"
+                                                    : "opacity-0 scale-95 -translate-y-1"
                                             }`}
                                         >
-                                            {item.children!.map((child) => (
+                                            {item.children!.map((child, index) => (
                                                 <li key={child.href}>
                                                     <Link
                                                         href={child.href}
                                                         onClick={() => setOpenDropdown(null)}
-                                                        className={`block px-4 py-2 text-sm transition-colors ${
+                                                        className={`group/child flex items-center justify-between px-4 py-2.5 text-sm transition-colors ${
                                                             pathname === child.href
-                                                                ? "text-black font-semibold"
-                                                                : "text-black/60 hover:text-black hover:bg-gray-50"
+                                                                ? "bg-gray-50 text-black font-semibold"
+                                                                : "text-black/60 hover:bg-gray-50 hover:text-black"
                                                         }`}
                                                     >
-                                                        {child.title}
+                                                        <span>{child.title}</span>
+                                                        <span
+                                                            className={`h-1.5 w-1.5 rounded-full bg-[#701513] transition-opacity ${
+                                                                pathname === child.href
+                                                                    ? "opacity-100"
+                                                                    : "opacity-0 group-hover/child:opacity-60"
+                                                            }`}
+                                                        />
                                                     </Link>
+                                                    {index < item.children!.length - 1 && (
+                                                        <div className="mx-4 border-t border-gray-100" />
+                                                    )}
                                                 </li>
                                             ))}
                                         </ul>
@@ -253,7 +294,7 @@ export default function HeaderComponent() {
 
             {/* Botão Mobile */}
             <button
-                className="relative z-[60] flex h-8 w-8 flex-col items-center justify-center gap-[6px] min-[1050px]:hidden"
+                className="relative z-[60] flex h-8 w-8 flex-col items-center justify-center gap-[6px] min-[1050px]:hidden shrink-0"
                 onClick={handleToggleMobileMenu}
                 aria-label="Abrir menu"
             >
@@ -276,46 +317,91 @@ export default function HeaderComponent() {
                 />
             </button>
 
-            {/* Menu Mobile */}
+            {/* Menu Mobile — drawer full screen: topo com identidade + lista de links com ícone */}
             <nav
-                className={`absolute left-0 top-full w-full origin-top overflow-hidden border-b border-gray-200 bg-white shadow-lg transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] min-[1050px]:hidden ${
+                className={`fixed inset-0 z-[55] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-17 py-4 md:py-5 lg:py-7 h-[100dvh] w-screen overflow-y-auto bg-white transition-all duration-400 ease-[cubic-bezier(.22,1,.36,1)] min-[1050px]:hidden ${
                     isOpen
-                        ? "translate-y-0 scale-y-100 opacity-100"
-                        : "-translate-y-3 scale-y-95 opacity-0 pointer-events-none"
+                        ? "translate-x-0 opacity-100"
+                        : "translate-x-4 opacity-0 pointer-events-none"
                 }`}
             >
-                <ul className="flex flex-col items-center gap-3 px-6 py-8">
+                {/* Topo com identidade da paróquia */}
+                <div className="relative border-b-2 border-black/20 pb-6">
+                    
+
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
+                <img
+                    src="/img/institucional/logo.png"
+                    alt="Logo"
+                    className="w-11 sm:w-12 md:w-14 lg:w-16 xl:w-18 h-auto shrink-0"
+                />
+
+                <h2
+                    className={`text-sm sm:text-base md:text-[15px] lg:text-lg xl:text-xl font-bold flex flex-col leading-[1.15] md:leading-5 tracking-wide md:tracking-wider transition-colors duration-300 whitespace-nowrap text-black   
+                    }`}
+                >
+                    <span>Paróquia Divino</span>
+                    <span>Espírito Santo</span>
+                </h2>
+            </div>
+                </div>
+
+                {/* Lista de navegação */}
+                <ul className="flex flex-col px-2 py-2">
                     {navigation.map((item) => {
                         const hasChildren = !!item.children?.length;
+                        const Icon = getNavIcon(item.title);
+                        const active =
+                            pathname === item.href ||
+                            (hasChildren && item.children!.some((child) => pathname === child.href));
 
                         if (hasChildren) {
                             const isSubmenuOpen = openMobileSubmenu === item.href;
                             return (
-                                <li key={item.href} className="flex flex-col items-center w-full">
+                                <li key={item.href} className="border-b border-gray-100 last:border-b-0">
                                     <button
                                         type="button"
-                                        className={`${mobileLinkClass(item.href)} flex items-center gap-1`}
+                                        className={`flex w-full items-center justify-between px-4 py-4 transition-colors ${
+                                            active ? "text-black" : "text-black/70"
+                                        }`}
                                         onClick={() =>
                                             setOpenMobileSubmenu(isSubmenuOpen ? null : item.href)
                                         }
                                         aria-expanded={isSubmenuOpen}
                                     >
-                                        {item.title}
+                                        <span className="flex items-center gap-4">
+                                            <Icon size={20} className="text-[#701513]" />
+                                            <span
+                                                className={`text-base ${
+                                                    active ? "font-semibold" : "font-medium"
+                                                }`}
+                                            >
+                                                {item.title}
+                                            </span>
+                                        </span>
                                         <ChevronDown
                                             size={18}
-                                            className={`transition-transform duration-200 ${
+                                            className={`text-black/40 transition-transform duration-200 ${
                                                 isSubmenuOpen ? "rotate-180" : ""
                                             }`}
                                         />
                                     </button>
 
-                                    {isSubmenuOpen && (
-                                        <ul className="flex flex-col items-center gap-2 pt-2 pb-1">
+                                    <div
+                                        className={`overflow-hidden transition-all duration-300 ease-out ${
+                                            isSubmenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                                        }`}
+                                    >
+                                        <ul className="flex flex-col gap-1 pb-3 pl-[52px] pr-4">
                                             {item.children!.map((child) => (
                                                 <li key={child.href}>
                                                     <Link
                                                         href={child.href}
-                                                        className="text-base text-black/60 hover:text-black transition-colors"
+                                                        className={`block rounded-lg px-3 py-2 text-sm transition-colors ${
+                                                            pathname === child.href
+                                                                ? "bg-gray-50 font-semibold text-black"
+                                                                : "text-black/60 hover:bg-gray-50 hover:text-black"
+                                                        }`}
                                                         onClick={() => {
                                                             setOpenMobileSubmenu(null);
                                                             setIsOpen(false);
@@ -326,34 +412,28 @@ export default function HeaderComponent() {
                                                 </li>
                                             ))}
                                         </ul>
-                                    )}
+                                    </div>
                                 </li>
                             );
                         }
 
                         return (
-                            <li key={item.href}>
+                            <li key={item.href} className="border-b border-gray-100 last:border-b-0">
                                 <Link
                                     href={item.href}
-                                    className={mobileLinkClass(item.href)}
+                                    className={`flex items-center gap-4 px-4 py-4 transition-colors ${
+                                        active ? "text-black" : "text-black/70"
+                                    }`}
                                     onClick={() => setIsOpen(false)}
                                 >
-                                    {item.title}
+                                    <Icon size={20} className="text-[#701513]" />
+                                    <span className={`text-base ${active ? "font-semibold" : "font-medium"}`}>
+                                        {item.title}
+                                    </span>
                                 </Link>
                             </li>
                         );
                     })}
-
-                    {/* <li className="mt-3">
-                        <Link
-                            href="/profile"
-                            onClick={() => setIsOpen(false)}
-                            className="flex items-center justify-center gap-2 rounded-full bg-[#701513] px-5 py-3 font-semibold text-white transition hover:opacity-90"
-                        >
-                            <User size={20} />
-                            Seu Perfil
-                        </Link>
-                    </li> */}
                 </ul>
             </nav>
         </header>

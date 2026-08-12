@@ -137,7 +137,6 @@ export default function Contato() {
               <NewsletterForm
                 placeholder="Clique aqui para contribuir com nossas obras sociais."
                 buttonLabel="Contribuir"
-                size="lg"
                 className="w-full"
                 onSubmit={(value) => {
                   // ex: chamar API/checkout de doação
