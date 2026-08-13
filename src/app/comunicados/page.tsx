@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "@/components/layout/Container";
 import { HatGlasses } from "lucide-react";
 import ComunicadoHero from "@/components/ui/cards/ComunicadoHero";
@@ -12,10 +12,9 @@ import { useFeaturedAnnouncement } from "@/hooks/useFeaturedAnnouncement";
 import { useSidebarAnnouncements } from "@/hooks/useSidebarAnnouncements";
 import { useCarouselAnnouncements } from "@/hooks/useCarouselAnnouncements";
 import { useActiveFundraisingCampaign } from "@/hooks/useActiveFundraisingCampaign";
+import { useCarouselItemsPerView } from "@/hooks/useCarouselItemsPerView";
 
 const FALLBACK_ANNOUNCEMENT_IMAGE = "/img/hero/eventos-img.png"; // usada quando o comunicado não tem imagem própria
-const CAROUSEL_PAGE_SIZE = 4; // quantos comunicados aparecem por página (4 no desktop)
-const CAROUSEL_BREAKPOINTS: Array<"base" | "sm" | "lg" | "xl"> = ["base", "sm", "lg", "xl"];
 
 export default function Comunicados() {
     const { data: featuredAnnouncement, loading: featuredLoading } = useFeaturedAnnouncement();
@@ -23,13 +22,23 @@ export default function Comunicados() {
     const { data: carouselAnnouncements, loading: carouselLoading } = useCarouselAnnouncements();
     const { data: fundraisingCampaign, loading: fundraisingLoading } = useActiveFundraisingCampaign();
 
+    // Quantos cards cabem por "página" no breakpoint atual (1 mobile, 2 sm, 3 lg, 4 xl)
+    const carouselItemsPerView = useCarouselItemsPerView();
+
     const [carouselPage, setCarouselPage] = useState(0);
     const totalCarouselPages = carouselAnnouncements
-        ? Math.ceil(carouselAnnouncements.length / CAROUSEL_PAGE_SIZE)
+        ? Math.ceil(carouselAnnouncements.length / carouselItemsPerView)
         : 0;
+
+    // Se o breakpoint mudar (ex: resize/rotate), garante que a página atual
+    // continua válida em vez de deixar o carrossel "preso"
+    useEffect(() => {
+        setCarouselPage((page) => Math.min(page, Math.max(totalCarouselPages - 1, 0)));
+    }, [totalCarouselPages]);
+
     const visibleCarouselAnnouncements = (carouselAnnouncements ?? []).slice(
-        carouselPage * CAROUSEL_PAGE_SIZE,
-        carouselPage * CAROUSEL_PAGE_SIZE + CAROUSEL_PAGE_SIZE
+        carouselPage * carouselItemsPerView,
+        carouselPage * carouselItemsPerView + carouselItemsPerView
     );
     const canGoNextPage = carouselPage < totalCarouselPages - 1;
     const canGoPreviousPage = carouselPage > 0;
@@ -55,16 +64,16 @@ export default function Comunicados() {
                 )}
 
                 {/* Sidebar */}
-                <div className="w-full min-w-0 flex flex-col gap-5 mt-2">
-
+                 <div className="w-full min-w-0 h-full flex flex-col justify-between  gap-3 mt-2">
+                    <div className="flex flex-col gap-7">
                     {/* Título da sidebar */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 mb-2">
                         <div className="flex items-center gap-2 border-b-3 border-[#701513] pb-2">
                             <HatGlasses size={32} className="text-black shrink-0" />
                             <h4 className="text-lg sm:text-xl font-semibold text-black">Fique por Dentro</h4>
                         </div>
                     </div>
-
+                    
                     {sidebarLoading || !sidebarAnnouncements ? (
                         <p className="text-black/60">Carregando comunicados...</p>
                     ) : (
@@ -79,17 +88,6 @@ export default function Comunicados() {
                         )
                     )}
 
-                    {fundraisingLoading || !fundraisingCampaign ? (
-                        <p className="text-black/60">Carregando campanha...</p>
-                    ) : (
-                        <FundraisingCard
-                            title={fundraisingCampaign.title}
-                            description={fundraisingCampaign.description}
-                            currentAmount={fundraisingCampaign.currentAmount}
-                            goalAmount={fundraisingCampaign.goalAmount}
-                        />
-                    )}
-
                     {sidebarLoading || !sidebarAnnouncements ? null : (
                         sidebarAnnouncements[1] && (
                             <NewsSidebarCard
@@ -101,6 +99,18 @@ export default function Comunicados() {
                             />
                         )
                     )}
+                    </div>
+
+                    {fundraisingLoading || !fundraisingCampaign ? (
+                        <p className="text-black/60">Carregando campanha...</p>
+                    ) : (
+                        <FundraisingCard
+                            title={fundraisingCampaign.title}
+                            description={fundraisingCampaign.description}
+                            currentAmount={fundraisingCampaign.currentAmount}
+                            goalAmount={fundraisingCampaign.goalAmount}
+                        />
+                    )}
                 </div>
             </section>
 
@@ -109,7 +119,7 @@ export default function Comunicados() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 flex-1 min-w-0">
                     {carouselLoading || !carouselAnnouncements
                         ? <p className="text-black/60">Carregando...</p>
-                        : visibleCarouselAnnouncements.map((announcement, index) => (
+                        : visibleCarouselAnnouncements.map((announcement) => (
                             <ComunicadoCarouselCard
                                 key={announcement.id}
                                 slug={announcement.slug}
@@ -117,7 +127,6 @@ export default function Comunicados() {
                                 imageAlt={announcement.title}
                                 badgeLabel={announcement.category}
                                 title={announcement.title}
-                                visibleFrom={CAROUSEL_BREAKPOINTS[index] ?? "xl"}
                             />
                         ))}
                 </div>
