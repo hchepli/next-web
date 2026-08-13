@@ -128,7 +128,7 @@ export default function Home() {
       />
     </div>  
     <Container>
-      <SectionDivider showLogo showName position="left" />
+      <SectionDivider showLogo showName position="left" className="transform translate-y-[5px]" />
     </Container>
   </HeroSection>
 )}

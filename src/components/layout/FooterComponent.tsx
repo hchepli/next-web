@@ -6,7 +6,7 @@ export default function FooterComponent() {
 <footer className="relative bg-[#701513] pb-6 pb-6">
 
       <Container className="w-full flex flex-col gap-10">
-    <SectionDivider showLogo showName rotate />
+    <SectionDivider showLogo showName rotate  className="transform translate-y-[-5px]"/>
         {/* Topo: texto + card "Sinta-se em casa" */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="flex flex-col gap-4">
