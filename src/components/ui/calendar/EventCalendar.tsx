@@ -6,11 +6,12 @@ import type { View, Event as BigCalendarEvent } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-overrides.css";
 import { useCalendarEntries } from "@/hooks/useCalendarEntries";
 import { calendarCategories } from "@/data/event/calendarCategory";
-import { CalendarCategoryKey } from "@/types/event/calendarEntry";
+import { CalendarCategoryKey, CalendarEntryType } from "@/types/event/calendarEntry";
 
 const locales = { "pt-BR": ptBR };
 
@@ -28,7 +29,10 @@ const categoryColors: Record<CalendarCategoryKey, string> = calendarCategories.r
 );
 
 interface CalendarViewEvent extends BigCalendarEvent {
+  id: string;
+  slug: string | null;
   category: CalendarCategoryKey;
+  type: CalendarEntryType;
 }
 
 function eventPropGetter(event: CalendarViewEvent) {
@@ -45,6 +49,7 @@ function eventPropGetter(event: CalendarViewEvent) {
 }
 
 export default function EventCalendar() {
+  const router = useRouter();
   const [view, setView] = useState<View>("month");
   const [date, setDate] = useState(new Date());
   const { data: calendarEntries, loading } = useCalendarEntries();
@@ -52,13 +57,25 @@ export default function EventCalendar() {
   const events: CalendarViewEvent[] = useMemo(
     () =>
       (calendarEntries ?? []).map((entry) => ({
+        id: entry.id,
+        slug: entry.slug,
         title: entry.title,
         start: new Date(entry.start),
         end: new Date(entry.end),
         category: entry.category,
+        type: entry.type,
       })),
     [calendarEntries]
   );
+
+  function handleSelectEvent(event: CalendarViewEvent) {
+    if (event.type === "event" && event.slug) {
+      router.push(`/eventos/${event.slug}`);
+      return;
+    }
+
+    router.push(`/missas/${event.id}`);
+  }
 
   if (loading) {
     return (
@@ -79,8 +96,9 @@ export default function EventCalendar() {
         onView={setView}
         date={date}
         onNavigate={setDate}
+        onSelectEvent={handleSelectEvent}
         eventPropGetter={eventPropGetter}
-        style={{ height: 720 }}
+        style={{ height: 720, cursor: "pointer" }}
         messages={{
           next: "Próximo",
           previous: "Anterior",
