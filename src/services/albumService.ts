@@ -22,13 +22,16 @@ export async function getAllAlbums(): Promise<AlbumListItem[]> {
   return albumMock
     .map((album) => {
       const photos = getPhotosForAlbum(album);
+      // Capa = foto com isCover true (espelha fotos.is_capa +
+      // constraint uq_fotos_capa_por_album no schema). Sem capa marcada,
+      // cai para a primeira foto do álbum e, por último, para um fallback fixo.
       const cover = photos.find((photo) => photo.isCover) ?? photos[0];
       return {
         id: album.id,
         slug: album.slug,
         title: album.title,
         description: album.description ?? "",
-        coverUrl: album.coverUrl ?? cover?.url ?? FALLBACK_IMAGE,
+        coverUrl: cover?.url ?? FALLBACK_IMAGE,
         photoCount: photos.length,
         hasEvent: album.eventId !== null,
       };

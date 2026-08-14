@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Images, ArrowUpRight } from "lucide-react";
+import { Images, ArrowUpRight, ImageOff } from "lucide-react";
 import Container from "@/components/layout/Container";
 import { useAlbums } from "@/hooks/useAlbums";
 import { AlbumListItem } from "@/types/institutional/albumListItem";
+import {AlbumGridSkeleton} from "@/components/ui/skeletons/AlbumGridSkeleton";
 
 function AlbumCard({ slug, title, coverUrl, photoCount }: AlbumListItem) {
     return (
@@ -36,7 +37,7 @@ function AlbumCard({ slug, title, coverUrl, photoCount }: AlbumListItem) {
 }
 
 export default function Galeria() {
-    const { data: albums, loading } = useAlbums();
+    const { data: albums, loading, error, refetch } = useAlbums();
 
     return (
         <Container className="w-full min-h-screen my-20 pt-20">
@@ -52,9 +53,21 @@ export default function Galeria() {
                 </p>
             </div>
 
-            {loading || !albums ? (
-                <p className="text-black/60 pb-20">Carregando álbuns...</p>
-            ) : albums.length === 0 ? (
+            {loading ? (
+                <AlbumGridSkeleton />
+            ) : error ? (
+                <div className="flex flex-col items-center justify-center gap-3 py-20 text-center">
+                    <ImageOff size={28} className="text-black/30" />
+                    <p className="text-black/60">Não foi possível carregar os álbuns agora.</p>
+                    <button
+                        type="button"
+                        onClick={refetch}
+                        className="text-sm font-medium text-[#701513] underline underline-offset-2"
+                    >
+                        Tentar novamente
+                    </button>
+                </div>
+            ) : !albums || albums.length === 0 ? (
                 <p className="text-black/50 pb-20">Ainda não há álbuns com fotos publicadas.</p>
             ) : (
                 <div className="columns-1 sm:columns-2 lg:columns-3 gap-5">

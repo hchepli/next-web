@@ -2,9 +2,10 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, Images } from "lucide-react";
+import { ChevronLeft, Images, ImageOff } from "lucide-react";
 import Container from "@/components/layout/Container";
 import PhotoLightbox from "@/components/ui/layout/PhotoLightbox";
+import PhotoGridSkeleton from "@/components/ui/skeletons/PhotoGridSkeleton";
 import { useAlbum } from "@/hooks/useAlbum";
 
 interface AlbumDetailPageProps {
@@ -13,7 +14,7 @@ interface AlbumDetailPageProps {
 
 export default function AlbumDetailPage({ params }: AlbumDetailPageProps) {
   const { slug } = use(params);
-  const { data: album, loading } = useAlbum(slug);
+  const { data: album, loading, error, refetch } = useAlbum(slug);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
@@ -26,17 +27,27 @@ export default function AlbumDetailPage({ params }: AlbumDetailPageProps) {
         Voltar para Galeria
       </Link>
 
-      {loading || !album ? (
-        loading ? (
-          <p className="text-black/60 pb-20">Carregando álbum...</p>
-        ) : (
-          <div className="flex flex-col gap-3 py-20 text-center">
-            <p className="text-black/70 text-lg font-medium">Álbum não encontrado.</p>
-            <Link href="/galeria" className="text-[#701513] underline w-fit mx-auto">
-              Voltar para a galeria
-            </Link>
-          </div>
-        )
+      {loading ? (
+        <PhotoGridSkeleton />
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center gap-3 py-20 text-center">
+          <ImageOff size={28} className="text-black/30" />
+          <p className="text-black/60">Não foi possível carregar este álbum agora.</p>
+          <button
+            type="button"
+            onClick={refetch}
+            className="text-sm font-medium text-[#701513] underline underline-offset-2"
+          >
+            Tentar novamente
+          </button>
+        </div>
+      ) : !album ? (
+        <div className="flex flex-col gap-3 py-20 text-center">
+          <p className="text-black/70 text-lg font-medium">Álbum não encontrado.</p>
+          <Link href="/galeria" className="text-[#701513] underline w-fit mx-auto">
+            Voltar para a galeria
+          </Link>
+        </div>
       ) : (
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-1 pb-2">
