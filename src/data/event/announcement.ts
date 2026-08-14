@@ -11,6 +11,7 @@ export const announcementMock: Announcement[] = [
     category: "Ministerios",
     image: "/img/comunicados/noticia.png",
     authorId: null,
+    status: "PUBLICADO",
     publishedAt: "2026-06-08T12:00:00.000Z",
   },
   {
@@ -22,6 +23,7 @@ export const announcementMock: Announcement[] = [
     category: "Ministerios",
     image: "/img/comunicados/ministerios.png",
     authorId: null,
+    status: "PUBLICADO",
     publishedAt: "2026-06-05T09:00:00.000Z",
   },
   {
@@ -33,6 +35,7 @@ export const announcementMock: Announcement[] = [
     category: "Ministerios",
     image: "/img/comunicados/ministerios.png",
     authorId: null,
+    status: "PUBLICADO",
     publishedAt: "2026-06-04T09:00:00.000Z",
   },
   {
@@ -44,6 +47,7 @@ export const announcementMock: Announcement[] = [
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
+    status: "PUBLICADO",
     publishedAt: "2026-06-03T09:00:00.000Z",
   },
   {
@@ -55,6 +59,7 @@ export const announcementMock: Announcement[] = [
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
+    status: "PUBLICADO",
     publishedAt: "2026-06-02T09:00:00.000Z",
   },
   {
@@ -66,6 +71,7 @@ export const announcementMock: Announcement[] = [
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
+    status: "PUBLICADO",
     publishedAt: "2026-06-01T09:00:00.000Z",
   },
   {
@@ -77,6 +83,7 @@ export const announcementMock: Announcement[] = [
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
+    status: "PUBLICADO",
     publishedAt: "2026-05-31T09:00:00.000Z",
   },
   {
@@ -88,6 +95,7 @@ export const announcementMock: Announcement[] = [
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
+    status: "PUBLICADO",
     publishedAt: "2026-05-30T09:00:00.000Z",
   },
   {
@@ -99,6 +107,20 @@ export const announcementMock: Announcement[] = [
     category: "Ministerios",
     image: "/img/comunicados/carrossel.png",
     authorId: null,
+    status: "PUBLICADO",
     publishedAt: "2026-05-29T09:00:00.000Z",
+  },
+  {
+    // Exemplo de rascunho (UC024 - comunicado ainda não publicado pela Secretaria).
+    // Deve ficar de fora de toda consulta pública (validar filtro em announcementService).
+    id: "announcement-10",
+    slug: "comunicado-em-rascunho-teste",
+    title: "[Rascunho de teste] Não deve aparecer no site público",
+    content: "Conteúdo de teste apenas para validar o filtro de status RASCUNHO/PUBLICADO.",
+    category: "Ministerios",
+    image: "/img/comunicados/ministerios.png",
+    authorId: null,
+    status: "RASCUNHO",
+    publishedAt: "2026-06-09T09:00:00.000Z",
   },
 ];

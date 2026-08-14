@@ -40,6 +40,12 @@ export default function EventDetailPage({ params }: EventDetailPageProps) {
         )
       ) : (
         <div className="flex flex-col gap-14">
+          {event.recordStatus === "CANCELADO" && (
+            <div className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 font-medium">
+              Este evento foi cancelado pela paróquia. As informações abaixo são mantidas apenas para referência.
+            </div>
+          )}
+
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
             {/* Conteúdo principal */}
             <div className="flex-1 min-w-0 flex flex-col gap-6">

@@ -1,3 +1,5 @@
+import { EventRecordStatus } from "./event";
+
 export type EventStatus = "past" | "today" | "future";
 
 export interface EventListItem {
@@ -41,7 +43,8 @@ export interface EventDetail {
   startDate: string;
   endDate: string | null;
   image: string;
-  status: EventStatus;
+  status: EventStatus; // calculado (passado/hoje/futuro) a partir das datas
+  recordStatus: EventRecordStatus; // ATIVO/CANCELADO (coluna eventos.status no schema)
   gallery: EventPhotoItem[];
   faq: EventFaqItem[];
   whatsappHref: string;

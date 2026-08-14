@@ -81,6 +81,6 @@ export const eventMock: Event[] = [
     endDate: null,
     location: "Igreja Matriz",
     massId: null,
-    status: "ATIVO",
+    status: "CANCELADO",
   },
 ];

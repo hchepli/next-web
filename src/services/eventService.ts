@@ -69,13 +69,18 @@ export async function getUpcomingEventSlides(): Promise<EventSlide[]> {
 // Retorna todos os eventos (passados e futuros) para a página /eventos,
 // já com imagem de capa resolvida e status calculado (passado/hoje/futuro),
 // ordenados cronologicamente (mais antigo -> mais recente) para agrupar por mês no front.
+// Alinhamento com schema: eventos.status (ATIVO/CANCELADO) é campo de gestão do
+// admin (evento cancelado sem precisar excluir o registro nem as escalas vinculadas).
+// Evento CANCELADO não deve aparecer na listagem pública (mesma regra já aplicada
+// em getUpcomingEventSlides, que faltava aqui).
 // TODO: quando o backend existir, trocar o corpo por:
-// const response = await fetch("/api/eventos");
+// const response = await fetch("/api/eventos?status=ATIVO");
 // return response.json();
 export async function getAllEventsWithStatus(): Promise<EventListItem[]> {
   await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
 
   return [...eventMock]
+    .filter((event) => event.status === "ATIVO")
     .sort((a, b) => a.startDate.localeCompare(b.startDate))
     .map((event) => {
       const cover = getPhotosForEvent(event.id).find((photo) => photo.isCover);
@@ -123,6 +128,10 @@ export async function getEventDetail(slug: string): Promise<EventDetail | null> 
     endDate: event.endDate,
     image: cover?.url ?? FALLBACK_IMAGE,
     status: getEventStatus(event.startDate, event.endDate),
+    // Diferente da listagem (que esconde CANCELADO), no detalhe mantemos acessível
+    // (evita link quebrado se já foi compartilhado) e sinalizamos via recordStatus,
+    // exibido como aviso na página.
+    recordStatus: event.status,
     gallery: photos.map((photo) => ({
       id: photo.id,
       url: photo.url,
