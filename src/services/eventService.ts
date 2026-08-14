@@ -49,12 +49,14 @@ export async function getUpcomingEventSlides(): Promise<EventSlide[]> {
   const now = new Date();
 
   return eventMock
-    .filter((event) => new Date(event.startDate) >= now)
+    // status ATIVO (eventos.status no schema) - eventos cancelados não aparecem na Home
+    .filter((event) => event.status === "ATIVO" && new Date(event.startDate) >= now)
     .sort((a, b) => a.startDate.localeCompare(b.startDate))
     .map((event) => {
       const cover = getPhotosForEvent(event.id).find((photo) => photo.isCover);
       return {
         id: event.id,
+        slug: event.slug,
         image: cover?.url ?? FALLBACK_IMAGE,
         titleLines: [event.name.toUpperCase()],
         description: event.description ?? "",

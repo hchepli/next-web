@@ -21,6 +21,7 @@ export const eventMock: Event[] = [
     endDate: null,
     location: "Igreja Matriz",
     massId: null,
+    status: "ATIVO",
   },
   {
     id: "event-2",
@@ -32,6 +33,7 @@ export const eventMock: Event[] = [
     endDate: daysFromNow(-14, 18),
     location: "Salão Paroquial",
     massId: null,
+    status: "ATIVO",
   },
   {
     id: "event-3",
@@ -43,6 +45,7 @@ export const eventMock: Event[] = [
     endDate: null,
     location: "Igreja Matriz",
     massId: null,
+    status: "ATIVO",
   },
   {
     id: "event-4",
@@ -54,6 +57,7 @@ export const eventMock: Event[] = [
     endDate: null,
     location: "Salão Paroquial",
     massId: null,
+    status: "ATIVO",
   },
   {
     id: "event-5",
@@ -65,6 +69,7 @@ export const eventMock: Event[] = [
     endDate: null,
     location: "Igreja Matriz",
     massId: null,
+    status: "ATIVO",
   },
   {
     id: "event-6",
@@ -76,5 +81,6 @@ export const eventMock: Event[] = [
     endDate: null,
     location: "Igreja Matriz",
     massId: null,
+    status: "ATIVO",
   },
 ];

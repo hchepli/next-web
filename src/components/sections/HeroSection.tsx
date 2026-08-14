@@ -6,6 +6,7 @@ interface HeroSectionProps {
   overlayOpacity?: string;
   children: ReactNode;
   className?: string;
+  id?: string;
 }
 
 export default function HeroSection({
@@ -14,11 +15,12 @@ export default function HeroSection({
   overlayOpacity = "bg-black/80",
   children,
   className = "",
+  id,
 }: HeroSectionProps) {
   const alignment = align === "start" ? "items-start justify-center" : "items-end justify-end";
 
   return (
-    <section className={`relative flex flex-col ${alignment} min-h-screen ${className}`}>
+    <section id={id} className={`relative flex flex-col ${alignment} min-h-screen ${className}`}>
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url('${backgroundImage}')` }}

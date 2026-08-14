@@ -43,8 +43,8 @@ export default function Home() {
   const STEP = activeCardWidth + activeGap;
   const WINDOW_WIDTH = activeCardWidth + activeGap + activePartialVisible;
 
-  const { data: eventSlides, loading: eventsLoading } = useUpcomingEventSlides();
-  const { data: weeklySchedule, loading: scheduleLoading } = useWeeklyMassSchedule();
+  const { data: eventSlides, loading: eventsLoading, error: eventsError } = useUpcomingEventSlides();
+  const { data: weeklySchedule, loading: scheduleLoading, error: scheduleError } = useWeeklyMassSchedule();
 
   const {
     n,
@@ -80,6 +80,8 @@ export default function Home() {
             description="Veja os próximos horários de missa e os avisos atualizados da paróquia"
             primaryLabel="Ver Horários"
             secondaryLabel="Próximos Eventos"
+            primaryHref="#programacao"
+            secondaryHref="#proximos-eventos"
           />
         </Container>
         <div className="absolute bottom-[-80px] sm:bottom-[-120px] lg:bottom-[-200px] left-0 z-20 w-full pointer-events-none">
@@ -87,12 +89,18 @@ export default function Home() {
         </div>
       </HeroSection>
 
-{eventsLoading || !current ? (
-  <HeroSection backgroundImage="/img/hero/eventos-img.png" align="end">
+{eventsError ? (
+  <HeroSection backgroundImage="/img/hero/eventos-img.png" align="end" id="proximos-eventos" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-32">
+    <p className="text-white pl-5 sm:pl-8 md:pl-17">
+      Não foi possível carregar os próximos eventos. Tente novamente mais tarde.
+    </p>
+  </HeroSection>
+) : eventsLoading || !current ? (
+  <HeroSection backgroundImage="/img/hero/eventos-img.png" align="end" id="proximos-eventos" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-32">
     <p className="text-white pl-5 sm:pl-8 md:pl-17">Carregando eventos...</p>
   </HeroSection>
 ) : (
-  <HeroSection backgroundImage={current.image} align="end">
+  <HeroSection backgroundImage={current.image} align="end" id="proximos-eventos" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-32">
     <EventCarouselTrack
       items={trackItems}
       translateX={(pos + 1) * STEP}
@@ -109,14 +117,16 @@ export default function Home() {
       gap={activeGap}
     />
 
-    <div className="relative flex flex-col lg:flex-row lg:justify-between w-full h-full px-5 sm:px-8 md:pl-17 pt-6 md:pt-10 lg:pt-0 pb-10 sm:pb-16 md:pb-30">
-      <div className="flex flex-col justify-end flex-1 lg:order-first">
+    <div className="relative flex flex-col lg:flex-row lg:justify-between w-full h-full px-5 sm:px-8 md:pl-17 pt-6 md:pt-10 lg:pt-0 pb-10 sm:pb-16 md:pb-30 pointer-events-none">
+      <div className="flex flex-col justify-end flex-1 lg:order-first pointer-events-auto">
         <HeroContent
           key={pos % n}
           titleLines={current.titleLines}
           description={current.description}
           primaryLabel="Saiba Mais"
-          secondaryLabel="Garantir Ingresso"
+          secondaryLabel="Garantir Presença"
+          primaryHref={`/eventos/${current.slug}`}
+          secondaryHref={`/eventos/${current.slug}#garantir-presenca`}
         />
       </div>
 
@@ -124,7 +134,7 @@ export default function Home() {
         count={n}
         activeIndex={pos % n}
         onSelect={handleIndicatorClick}
-        className="hidden md:flex mt-4 lg:mt-0 lg:absolute lg:bottom-15 lg:left-17"
+        className="hidden md:flex mt-4 lg:mt-0 lg:absolute lg:bottom-15 lg:left-17 pointer-events-auto"
       />
     </div>  
     <Container>
@@ -132,7 +142,7 @@ export default function Home() {
     </Container>
   </HeroSection>
 )}
-      <section className="flex flex-col lg:flex-row justify-center items-center min-h-[100dvh] lg:min-h-[65dvh] gap-5 lg:gap-0 px-6 lg:px-0">
+      <section id="programacao" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-32 flex flex-col lg:flex-row justify-center items-center min-h-[100dvh] lg:min-h-[65dvh] gap-5 lg:gap-0 px-6 lg:px-0">
         <TextActionBlock
           title="Com Você em Qualquer Lugar"
           description="Confira nossa agenda presencial e também acompanhe as transmissões ao vivo de onde estiver usando a internet. Veja a programação a seguir:"
@@ -145,7 +155,9 @@ export default function Home() {
             <CarouselControls onPrevious={handleSchedulePrevious} onNext={handleScheduleNext} />
           </div>
 
-          {scheduleLoading || scheduleTotal === 0 ? (
+          {scheduleError ? (
+            <p className="px-6 sm:px-10">Não foi possível carregar a programação da semana.</p>
+          ) : scheduleLoading || scheduleTotal === 0 ? (
             <p className="px-6 sm:px-10">Carregando programação...</p>
           ) : (
             <ScheduleCarouselTrack

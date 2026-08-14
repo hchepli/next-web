@@ -6,6 +6,8 @@ interface HeroContentProps {
   description: string;
   primaryLabel: string;
   secondaryLabel?: string;
+  primaryHref?: string;
+  secondaryHref?: string;
   onPrimaryClick?: () => void;
   onSecondaryClick?: () => void;
 }
@@ -16,6 +18,8 @@ export default function HeroContent({
   description,
   primaryLabel,
   secondaryLabel,
+  primaryHref,
+  secondaryHref,
   onPrimaryClick,
   onSecondaryClick,
 }: HeroContentProps) {
@@ -31,14 +35,25 @@ export default function HeroContent({
         {description}
       </p>
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-3 sm:gap-4 mt-4 sm:mt-6 w-full sm:w-auto">
-        <Button variant="primary" onClick={onPrimaryClick}>
-          {primaryLabel}
-        </Button>
-        {secondaryLabel && (
-          <Button variant="secondary" onClick={onSecondaryClick}>
-            {secondaryLabel}
+        {primaryHref ? (
+          <Button variant="primary" href={primaryHref}>
+            {primaryLabel}
+          </Button>
+        ) : (
+          <Button variant="primary" onClick={onPrimaryClick}>
+            {primaryLabel}
           </Button>
         )}
+        {secondaryLabel &&
+          (secondaryHref ? (
+            <Button variant="secondary" href={secondaryHref}>
+              {secondaryLabel}
+            </Button>
+          ) : (
+            <Button variant="secondary" onClick={onSecondaryClick}>
+              {secondaryLabel}
+            </Button>
+          ))}
       </div>
     </div>
   );

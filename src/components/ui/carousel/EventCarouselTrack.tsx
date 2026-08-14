@@ -2,6 +2,7 @@ import { CSSProperties } from "react";
 import EventCard from "../cards/EventCard";
 
 interface CarouselTrackItem {
+  slug: string;
   image: string;
   cardTitle: string;
   cardDescription: string;
@@ -68,6 +69,7 @@ export function EventCarouselTrack({
               image={slide.image}
               title={slide.cardTitle}
               description={slide.cardDescription}
+              href={`/eventos/${slide.slug}`}
               imageOnly={imageOnly}
               width={imageOnly ? cardWidth : undefined}
               height={imageOnly ? cardHeight : undefined}
